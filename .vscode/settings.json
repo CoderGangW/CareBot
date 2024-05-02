@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.fontFamily": "D2Coding ligature",
+    "editor.fontFamily": "D2Coding ligature, Consolas, 'Courier New', monospace",
+    "files.autoSave": "onFocusChange",
+    "editor.fontVariations": false
+}
