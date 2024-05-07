@@ -5,8 +5,8 @@ class robotdetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 여기에 로봇의 세부 정보를 보여주는 UI를 작성해주세요.
-    final String? robotName = ModalRoute.of(context)?.settings.arguments as String?;
+    final String? robotName =
+        ModalRoute.of(context)?.settings.arguments as String?;
 
     return Scaffold(
       appBar: AppBar(

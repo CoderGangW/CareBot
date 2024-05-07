@@ -35,8 +35,8 @@ class MorePage extends StatelessWidget {
             },
             customBorder: CircleBorder(),
             child: CircleAvatar(
-              radius: 50, // 반지름 설정
-              backgroundColor: Colors.deepPurpleAccent, // 배경색 설정
+              radius: 50,
+              backgroundColor: Colors.deepPurpleAccent,
               child: CircleAvatar(
                 radius: 48,
                 backgroundColor: Colors.white,

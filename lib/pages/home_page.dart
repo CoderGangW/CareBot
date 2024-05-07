@@ -91,9 +91,8 @@ class RobotCard extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: <Widget>[
-              // 로봇 이미지
               Image.asset(
-                'assets/walle-eve.png', // 로봇 이미지 경로
+                'assets/walle-eve.png',
                 width: 60,
                 height: 60,
               ),
@@ -111,6 +110,7 @@ class RobotCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
+
                     // 배터리 수준 및 동작 상태
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
