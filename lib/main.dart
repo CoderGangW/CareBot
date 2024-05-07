@@ -1,13 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+
+import 'package:myapps/pages/account_page.dart';
 import 'package:myapps/pages/add_Robot.dart';
 import 'package:myapps/pages/home_page.dart';
+import 'package:myapps/pages/loginPage.dart';
 import 'package:myapps/pages/notifications_page.dart';
 import 'package:myapps/pages/more_page.dart';
 import 'package:myapps/pages/Robot_Details.dart';
 
 import 'firebase_initializer.dart'; // Firebase 초기화 코드를 import
+
+String username = "";
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -52,6 +57,9 @@ class MyApp extends StatelessWidget {
         '/notifications': (context) => NotificationsPage(),
         '/more': (context) => MorePage(),
         '/addRobot': (context) => addRobot(),
+        '/account': (context) => accountPage(),
+        '/login': (context) => loginPage(),
+        //'/login/signup' : (context) => signupPage(),
       },
     );
   }
@@ -111,7 +119,11 @@ class _CareBotState extends State<CareBot> {
               currentPageIndex = index;
             });
           },
-          children: const [NotificationsPage(), HomePage(), MorePage()],
+          children: const [
+            NotificationsPage(),
+            HomePage(),
+            MorePage(),
+          ],
         ),
       ),
     );

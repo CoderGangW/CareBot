@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 
+import 'package:myapps/main.dart' as user;
+
 /*=============================================*/
 /*================[ More Page }================*/
 /*=============================================*/
 
-var appVersion = "Beta";
+var loginState = true;
 
+var appVersion = "Alpha 1.0.0";
+
+String _LoggedInUser = user.username;
+
+final String name = _LoggedInUser == "" ? "로그인을 해주세요" : _LoggedInUser;
 
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
@@ -21,21 +28,10 @@ class MorePage extends StatelessWidget {
           SizedBox(height: 50),
           InkWell(
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Close'),
-                    )
-                  ],
-                  title: Text("안녕 난 버튼!"),
-                  content: Text("계정버튼"),
-                ),
-              );
+              print(name);
+              _LoggedInUser == ""
+                  ? Navigator.pushNamed(context, '/login')
+                  : Navigator.pushNamed(context, '/account');
             },
             customBorder: CircleBorder(),
             child: CircleAvatar(
@@ -55,11 +51,8 @@ class MorePage extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            'Example@example.com',
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold
-            ),
+            name,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 20),
@@ -68,8 +61,7 @@ class MorePage extends StatelessWidget {
             style: TextStyle(
                 fontSize: 17,
                 color: Colors.black54,
-                fontWeight: FontWeight.bold
-            ),
+                fontWeight: FontWeight.bold),
           ),
           ListView.builder(
             shrinkWrap: true,
@@ -81,22 +73,15 @@ class MorePage extends StatelessWidget {
                 Icons.settings_outlined,
                 Icons.article_outlined,
               ];
-              const li_btnTitle = [
-                "로봇 추가",
-                "로봇 관리",
-                "로봇 사용법"
-              ];
-              const li_ctsTitle =[
-                "개발중",
-                "개발중",
-                "요로코롬"
-              ];
-              const li_ctsSubTitle=[
+              const li_btnTitle = ["로봇 추가", "로봇 관리", "로봇 사용법"];
+              const li_ctsTitle = ["개발중", "개발중", "요로코롬"];
+              const li_ctsSubTitle = [
                 "기능이 완성되지 않았습니다!",
                 "기능이 완성되지 않았습니다!",
                 "이러케 저러케"
               ];
-              return _buildButton(context, index, li_Icon, li_btnTitle, li_ctsTitle, li_ctsSubTitle);
+              return _buildButton(context, index, li_Icon, li_btnTitle,
+                  li_ctsTitle, li_ctsSubTitle);
             },
           ),
           SizedBox(height: 20),
@@ -105,8 +90,7 @@ class MorePage extends StatelessWidget {
             style: TextStyle(
                 fontSize: 17,
                 color: Colors.black54,
-                fontWeight: FontWeight.bold
-            ),
+                fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10),
           ListView.builder(
@@ -119,25 +103,16 @@ class MorePage extends StatelessWidget {
                 Icons.campaign_outlined,
                 Icons.assignment_ind_outlined,
               ];
-              const li_btnTitle = [
-                "알림 설정",
-                "우리의 목표",
-                "개발자 소개"
-              ];
-              const li_ctsTitle =[
-                "FireBase 연동",
-                "해피 실버 데이",
-                "강윤원"
-              ];
-              const li_ctsSubTitle=[
-                "FCM토큰 받아 연동하기",
-                "행복한 노년생활!",
-                "살려줘..."
-              ];
-              return _buildButton(context, index,li_Icon ,li_btnTitle, li_ctsTitle, li_ctsSubTitle);
+              const li_btnTitle = ["알림 설정", "우리의 목표", "개발자 소개"];
+              const li_ctsTitle = ["FireBase 연동", "해피 실버 데이", "강윤원"];
+              const li_ctsSubTitle = ["FCM토큰 받아 연동하기", "행복한 노년생활!", "살려줘..."];
+              return _buildButton(context, index, li_Icon, li_btnTitle,
+                  li_ctsTitle, li_ctsSubTitle);
             },
           ),
-          SizedBox(height: 30,),
+          SizedBox(
+            height: 30,
+          ),
           SizedBox(
             height: 30,
             child: Row(
@@ -152,12 +127,14 @@ class MorePage extends StatelessWidget {
       ),
     );
   }
-  Widget _buildButton(BuildContext context, int index, List<IconData> iconList, List btnTitle, List ctsTitle, List ctsSubTitle) {
+
+  Widget _buildButton(BuildContext context, int index, List<IconData> iconList,
+      List btnTitle, List ctsTitle, List ctsSubTitle) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
         onPressed: () {
-          if(index == 0){
+          if (index == 0) {
             Navigator.pushNamed(context, "/addRobot");
           } else {
             showDialog(
@@ -185,9 +162,7 @@ class MorePage extends StatelessWidget {
           shadowColor: Colors.white,
         ),
         child: ListTile(
-            leading: Icon(iconList[index]),
-            title: Text(btnTitle[index])
-        ),
+            leading: Icon(iconList[index]), title: Text(btnTitle[index])),
       ),
     );
   }

@@ -85,11 +85,7 @@ class RobotCard extends StatelessWidget {
       margin: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(
-              context,
-              '/robot_details',
-              arguments: robotName
-          );
+          Navigator.pushNamed(context, '/robot_details', arguments: robotName);
         },
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -119,18 +115,16 @@ class RobotCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Row(
-                          children:[
-                            Icon(
-                              _getBatteryIcon(),
-                              color: Colors.grey[600],
-                            ),
-                            Text(
-                              '$batteryLevel%',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ]
-                        ),
+                        Row(children: [
+                          Icon(
+                            _getBatteryIcon(),
+                            color: Colors.grey[600],
+                          ),
+                          Text(
+                            '$batteryLevel%',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ]),
                         SizedBox(width: 4),
                         Text(
                           '상태: $status',
