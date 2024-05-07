@@ -15,7 +15,7 @@ class addRobot extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextField(
             decoration: InputDecoration(
-                border: OutlineInputBorder(), hintText: "시리얼 넘버"),
+                border: OutlineInputBorder(), hintText: "시리얼 넘버입력"),
             textAlign: TextAlign.center,
           ),
         ),
