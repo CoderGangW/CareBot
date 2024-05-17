@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 
 import 'package:myapps/main.dart' as user;
 
-/*=============================================*/
-/*================[ More Page }================*/
-/*=============================================*/
+bool notistate = true;
 
 var loginState = true;
-
 var appVersion = "Alpha 1.0.0";
-
 String _LoggedInUser = user.username;
-
 final String name = _LoggedInUser == "" ? "로그인을 해주세요" : _LoggedInUser;
 
-class MorePage extends StatelessWidget {
-  const MorePage({super.key});
+class MorePage extends StatefulWidget {
+  const MorePage({Key? key}) : super(key: key);
 
   @override
+  _MorePageState createState() => _MorePageState();
+}
+
+class _MorePageState extends State<MorePage> {
+  @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    //final ThemeData theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -42,7 +42,7 @@ class MorePage extends StatelessWidget {
                 backgroundColor: Colors.white,
                 child: ClipOval(
                   child: Image.asset(
-                    'assets/walle-eve.png',
+                    'assets/usericon.png',
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -80,7 +80,7 @@ class MorePage extends StatelessWidget {
                 "기능이 완성되지 않았습니다!",
                 "이러케 저러케"
               ];
-              return _buildButton(context, index, li_Icon, li_btnTitle,
+              return _buildButton_myrobot(context, index, li_Icon, li_btnTitle,
                   li_ctsTitle, li_ctsSubTitle);
             },
           ),
@@ -93,20 +93,51 @@ class MorePage extends StatelessWidget {
                 fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  notistate = !notistate;
+                  print("1 : $notistate");
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                backgroundColor: Colors.white,
+                //primary: Colors.white,
+              ),
+              child: ListTile(
+                leading: Icon(Icons.notifications_outlined),
+                title: Text("알림설정"),
+                trailing: Switch.adaptive(
+                  activeColor: Colors.deepPurple,
+                  value: notistate,
+                  onChanged: (bool value) {
+                    setState(() {
+                      notistate = value;
+                      print("2 : $notistate");
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: 3,
+            itemCount: 2,
             itemBuilder: (context, index) {
               List<IconData> li_Icon = [
-                Icons.notifications_outlined,
                 Icons.campaign_outlined,
                 Icons.assignment_ind_outlined,
               ];
-              const li_btnTitle = ["알림 설정", "우리의 목표", "개발자 소개"];
-              const li_ctsTitle = ["FireBase 연동", "해피 실버 데이", "강윤원"];
-              const li_ctsSubTitle = ["FCM토큰 받아 연동하기", "행복한 노년생활!", "살려줘..."];
-              return _buildButton(context, index, li_Icon, li_btnTitle,
+              const li_btnTitle = ["우리의 목표", "개발자 소개"];
+              const li_ctsTitle = ["해피 실버 데이", "강윤원"];
+              const li_ctsSubTitle = ["행복한 노년생활!", "살려줘..."];
+              return _buildButton_appinfo(context, index, li_Icon, li_btnTitle,
                   li_ctsTitle, li_ctsSubTitle);
             },
           ),
@@ -128,8 +159,8 @@ class MorePage extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(BuildContext context, int index, List<IconData> iconList,
-      List btnTitle, List ctsTitle, List ctsSubTitle) {
+  Widget _buildButton_myrobot(BuildContext context, int index,
+      List<IconData> iconList, List btnTitle, List ctsTitle, List ctsSubTitle) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
@@ -159,7 +190,40 @@ class MorePage extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
           backgroundColor: Colors.white,
-          shadowColor: Colors.white,
+        ),
+        child: ListTile(
+            leading: Icon(iconList[index]), title: Text(btnTitle[index])),
+      ),
+    );
+  }
+
+  Widget _buildButton_appinfo(BuildContext context, int index,
+      List<IconData> iconList, List btnTitle, List ctsTitle, List ctsSubTitle) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: ElevatedButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('닫기'),
+                )
+              ],
+              title: Text(ctsTitle[index]),
+              content: Text(ctsSubTitle[index]),
+            ),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          backgroundColor: Colors.white,
         ),
         child: ListTile(
             leading: Icon(iconList[index]), title: Text(btnTitle[index])),

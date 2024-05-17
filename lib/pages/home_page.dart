@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 final List<Map<String, String>> robots = [
-  {'name': '로봇 1', 'battery': '40', 'status': '활성'},
-  {'name': '로봇 2', 'battery': '50', 'status': '비활성'},
+  {'name': '로봇 1', 'battery': '10', 'status': '활성'},
+  {'name': '로봇 2', 'battery': '20', 'status': '비활성'},
+  {'name': '로봇 3', 'battery': '40', 'status': '비활성'},
+  {'name': '로봇 4', 'battery': '60', 'status': '비활성'},
+  {'name': '로봇 5', 'battery': '80', 'status': '비활성'},
+  {'name': '로봇 6', 'battery': '100', 'status': '비활성'},
   // 필요한 만큼 로봇 정보를 추가할 수 있습니다.
 ];
 
@@ -79,6 +83,22 @@ class RobotCard extends StatelessWidget {
     }
   }
 
+  Color _getBatteryColor() {
+    final int level = int.tryParse(batteryLevel) ?? 0;
+    if (level >= 80) {
+      return Colors.green;
+    } else if (level >= 60) {
+      final double factor = (level - 60) / 20;
+      return Color.lerp(Colors.yellow, Colors.green, factor)!;
+    } else if (level >= 30) {
+      final double factor = (level - 30) / 30;
+      return Color.lerp(Colors.orange, Colors.yellow, factor)!;
+    } else {
+      final double factor = level / 30;
+      return Color.lerp(Colors.red, Colors.orange, factor)!;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -92,9 +112,9 @@ class RobotCard extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Image.asset(
-                'assets/walle-eve.png',
-                width: 60,
-                height: 60,
+                'assets/robotEXimg.png',
+                width: 80,
+                height: 80,
               ),
               SizedBox(width: 16),
               Expanded(
@@ -118,7 +138,7 @@ class RobotCard extends StatelessWidget {
                         Row(children: [
                           Icon(
                             _getBatteryIcon(),
-                            color: Colors.grey[600],
+                            color: _getBatteryColor(),
                           ),
                           Text(
                             '$batteryLevel%',
