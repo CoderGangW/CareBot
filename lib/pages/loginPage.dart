@@ -81,7 +81,7 @@ class loginPage extends StatelessWidget {
                 QuickAlert.show(
                   context: context,
                   type: QuickAlertType.error,
-                  title: "연결 끊김",
+                  title: "연결이 끊겨있습니다.",
                   text: "API서버와의 연결이 필요합니다",
                   confirmBtnText: "닫기",
                   animType: QuickAlertAnimType.slideInUp,
