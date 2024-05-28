@@ -1,45 +1,167 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:myapps/pages/loading_Screen.dart';
+import 'package:myapps/security/confAPI.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-final List<Map<String, String>> robots = [
-  {'name': '로봇 1', 'battery': '10', 'status': '활성'},
-  {'name': '로봇 2', 'battery': '20', 'status': '비활성'},
-  {'name': '로봇 3', 'battery': '40', 'status': '비활성'},
-  {'name': '로봇 4', 'battery': '60', 'status': '비활성'},
-  {'name': '로봇 5', 'battery': '80', 'status': '비활성'},
-  {'name': '로봇 6', 'battery': '100', 'status': '비활성'},
-  // 필요한 만큼 로봇 정보를 추가할 수 있습니다.
-];
+Future<Map<String, dynamic>> getLoginState() async {
+  final prefs = await SharedPreferences.getInstance();
+  final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  final username = prefs.getString('username') ?? '';
+  return {'isLoggedIn': isLoggedIn, 'username': username};
+}
 
-/*=============================================*/
-/*================[ Home Page }================*/
-/*=============================================*/
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+String errorMessage = "";
+
+Future<List<Map<String, String>>> getRobots(String username) async {
+  final String url;
+  url = getApiUrl('/select/robots?username=$username');
+  // if (Platform.isAndroid) {
+  //   url = 'http://10.0.2.2/select/robots?username=$username';
+  // } else if (Platform.isIOS) {
+  //   url = 'http://127.0.0.1/select/robots?username=$username';
+  // } else {
+  //   throw UnsupportedError('지원되지 않는 환경입니다.');
+  // }
+
+  try {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      final List<Map<String, String>> robots = data
+          .map<Map<String, String>>((item) => {
+                'name': item['ro_name'] as String,
+                'serial': item['ro_serial'] as String,
+                'status': item['ro_status'] as String,
+                'battery': item['ro_battery'].toString(),
+              })
+          .toList();
+      return robots;
+    } else {
+      final dynamic jsonData = jsonDecode(response.body);
+      errorMessage = jsonData['message'] ?? '로봇을 불러오는데 실패했습니다.';
+      throw Exception(errorMessage);
+    }
+  } catch (e) {
+    throw Exception('Error: $e');
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Map<String, String>> robots = [];
+  bool isLoggedIn = false;
+  String username = '';
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLoginState();
+  }
+
+  Future<void> _loadLoginState() async {
+    final loginState = await getLoginState();
+    setState(() {
+      isLoggedIn = loginState['isLoggedIn'];
+      username = loginState['username'];
+      if (isLoggedIn) {
+        _fetchRobots();
+      } else {
+        isLoading = false;
+      }
+    });
+  }
+
+  Future<void> _fetchRobots() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final robotsData = await getRobots(username);
+      setState(() {
+        robots = robotsData;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString();
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _handleRefresh() async {
+    await _fetchRobots();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: robots.map((robot) {
-              return RobotCard(
-                robotName: robot['name']!,
-                batteryLevel: robot['battery']!,
-                status: robot['status']!,
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/addRobot');
-        },
-        tooltip: "로봇 추가",
-        child: Icon(Icons.add),
-      ),
+      body: isLoggedIn
+          ? isLoading
+              ? Center(child: LoadingScreen())
+              : robots.isEmpty
+                  ? Center(
+                      child: Card(
+                        margin: EdgeInsets.all(16.0),
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text(
+                            errorMessage,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: _handleRefresh,
+                      child: SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: robots.map((robot) {
+                              return RobotCard(
+                                robotName: robot['name']!,
+                                batteryLevel: robot['battery']!,
+                                status: robot['status']!,
+                                serial: robot['serial']!,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    )
+          : Center(
+              child: Text(
+                '로봇을 보려면 로그인 해주세요!',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+      floatingActionButton: isLoggedIn
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/addRobot').then((_) {
+                  _fetchRobots();
+                });
+              },
+              tooltip: "로봇 추가",
+              child: Icon(Icons.add),
+            )
+          : null,
     );
   }
 }
@@ -51,11 +173,13 @@ class RobotCard extends StatelessWidget {
   final String robotName;
   final String batteryLevel;
   final String status;
+  final String serial;
 
   RobotCard({
     required this.robotName,
     required this.batteryLevel,
     required this.status,
+    required this.serial,
   });
 
   // 배터리 수준에 따른 아이콘 반환
@@ -99,13 +223,26 @@ class RobotCard extends StatelessWidget {
     }
   }
 
+  String _ChangeStringOfStatus(String status) {
+    String displayStatus = status == "off" ? "비활성화" : "활성화";
+    return displayStatus;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/robot_details', arguments: robotName);
+          Navigator.pushNamed(
+            context,
+            '/robot_details',
+            arguments: {
+              'serial': serial,
+            },
+          ).then((_) {
+            Navigator.pushReplacementNamed(context, '/');
+          });
         },
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -121,7 +258,6 @@ class RobotCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // 로봇 이름
                     Text(
                       robotName,
                       style: TextStyle(
@@ -130,25 +266,26 @@ class RobotCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
-
-                    // 배터리 수준 및 동작 상태
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Row(children: [
-                          Icon(
-                            _getBatteryIcon(),
-                            color: _getBatteryColor(),
-                          ),
                           Text(
                             '$batteryLevel%',
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 13),
+                          ),
+                          Transform.rotate(
+                            angle: 1.5708,
+                            child: Icon(
+                              _getBatteryIcon(),
+                              color: _getBatteryColor(),
+                            ),
                           ),
                         ]),
                         SizedBox(width: 4),
                         Text(
-                          '상태: $status',
-                          style: TextStyle(fontSize: 16),
+                          '상태 : ' + _ChangeStringOfStatus(status),
+                          style: TextStyle(fontSize: 13),
                         ),
                       ],
                     ),

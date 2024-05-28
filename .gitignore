@@ -32,6 +32,7 @@ migrate_working_dir/
 /build/
 /lib/firebase_initializer.dart
 /lib/firebase_options.dart
+/lib/security/*.dart
 
 # Symbolication related
 app.*.symbols

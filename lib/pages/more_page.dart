@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:myapps/main.dart' as user;
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool notistate = true;
-
-var loginState = true;
 var appVersion = "Alpha 1.0.0";
-String _LoggedInUser = user.username;
-final String name = _LoggedInUser == "" ? "로그인을 해주세요" : _LoggedInUser;
 
 class MorePage extends StatefulWidget {
   const MorePage({Key? key}) : super(key: key);
@@ -17,10 +14,36 @@ class MorePage extends StatefulWidget {
 }
 
 class _MorePageState extends State<MorePage> {
+  String _loggedInUser = "";
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLoggedInUser();
+  }
+
+  Future<void> _loadLoggedInUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _loggedInUser = prefs.getString('username') ?? "";
+      _isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    });
+  }
+
+  Future<void> _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false);
+    await prefs.setString('username', "");
+    setState(() {
+      _loggedInUser = "";
+      _isLoggedIn = false;
+    });
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
-    //final ThemeData theme = Theme.of(context);
-
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: ListView(
@@ -28,10 +51,11 @@ class _MorePageState extends State<MorePage> {
           SizedBox(height: 50),
           InkWell(
             onTap: () {
-              print(name);
-              _LoggedInUser == ""
-                  ? Navigator.pushNamed(context, '/login')
-                  : Navigator.pushNamed(context, '/account');
+              if (!_isLoggedIn) {
+                Navigator.pushNamed(context, '/login');
+              } else {
+                _showLogoutDialog();
+              }
             },
             customBorder: CircleBorder(),
             child: CircleAvatar(
@@ -51,7 +75,7 @@ class _MorePageState extends State<MorePage> {
           ),
           SizedBox(height: 10),
           Text(
-            name,
+            _loggedInUser.isEmpty ? "로그인" : _loggedInUser,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -107,7 +131,6 @@ class _MorePageState extends State<MorePage> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 backgroundColor: Colors.white,
-                //primary: Colors.white,
               ),
               child: ListTile(
                 leading: Icon(Icons.notifications_outlined),
@@ -227,6 +250,29 @@ class _MorePageState extends State<MorePage> {
         ),
         child: ListTile(
             leading: Icon(iconList[index]), title: Text(btnTitle[index])),
+      ),
+    );
+  }
+
+  void _showLogoutDialog() {
+    showPlatformDialog(
+      context: context,
+      builder: (context) => BasicDialogAlert(
+        title: Text("로그아웃 하시겠습니까?"),
+        actions: <Widget>[
+          BasicDialogAction(
+            title: Text("취소"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          BasicDialogAction(
+            title: Text("로그아웃"),
+            onPressed: () {
+              _logout();
+            },
+          ),
+        ],
       ),
     );
   }

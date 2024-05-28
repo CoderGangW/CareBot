@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import 'package:myapps/pages/account_page.dart';
 import 'package:myapps/pages/add_Robot.dart';
 import 'package:myapps/pages/home_page.dart';
@@ -13,16 +11,14 @@ import 'package:myapps/pages/loginPage.dart';
 import 'package:myapps/pages/more_page.dart';
 import 'package:myapps/pages/Robot_Details.dart';
 import 'package:myapps/pages/signup_Page.dart';
-
 import 'package:permission_handler/permission_handler.dart';
+import 'firebase_options.dart';
 
 int local_notification_id = 0;
-
-String username = "";
+String FCM_TOKEN = "";
 
 final StreamController<String?> selectNotificationStream =
     StreamController<String?>.broadcast();
-
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -35,12 +31,9 @@ void _permissionWithNotification() async {
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
   print("BACKGROUND FCM MESSAGE TEST");
-  // ignore: avoid_print
-  print('notification(${notificationResponse.id}) action tapped: '
-      '${notificationResponse.actionId} with'
-      ' payload: ${notificationResponse.payload}');
+  print(
+      'notification(${notificationResponse.id}) action tapped: ${notificationResponse.actionId} with payload: ${notificationResponse.payload}');
   if (notificationResponse.input?.isNotEmpty ?? false) {
-    // ignore: avoid_print
     print(
         'notification action tapped with input: ${notificationResponse.input}');
   }
@@ -48,10 +41,28 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('Firebase initialized successfully');
+  } catch (e) {
+    print('Error initializing Firebase: $e');
+    return;
+  }
+
   _permissionWithNotification();
-  String? token = await FirebaseMessaging.instance.getToken();
-  print("FCM token : $token");
+
+  try {
+    String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+    print('APNS Token: $apnsToken');
+
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("FCM token : $token");
+    FCM_TOKEN = token!;
+  } catch (e) {
+    print('Error getting FCM token: $e');
+  }
 
   final AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('ic_stat_ic_notification');
@@ -59,28 +70,33 @@ void main() async {
       DarwinInitializationSettings();
   final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveNotificationResponse:
-        (NotificationResponse notificationResponse) {
-      switch (notificationResponse.notificationResponseType) {
-        case NotificationResponseType.selectedNotification:
-          selectNotificationStream.add(notificationResponse.payload);
-          break;
-        case NotificationResponseType.selectedNotificationAction:
-          if (notificationResponse.actionId == navigationActionId) {
+
+  try {
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) {
+        switch (notificationResponse.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
             selectNotificationStream.add(notificationResponse.payload);
-          }
-          break;
-      }
-    },
-    onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-  );
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            if (notificationResponse.actionId == navigationActionId) {
+              selectNotificationStream.add(notificationResponse.payload);
+            }
+            break;
+        }
+      },
+      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+    );
+    print('Local notifications initialized successfully');
+  } catch (e) {
+    print('Error initializing local notifications: $e');
+  }
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('앱이 화면에 있을 때 메시지 수신!');
     print('메시지 데이터: ${message.data}');
-
     if (message.notification != null) {
       print('메시지에 알림이 포함되어 있음: ${message.notification}');
       _showNotification(message.notification!);
@@ -90,7 +106,6 @@ void main() async {
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     print('새로운 onMessageOpenedApp 이벤트가 발생했습니다!');
     print('메시지 데이터: ${message.data}');
-
     if (message.notification != null) {
       print('메시지에 알림이 포함되어 있음: ${message.notification}');
       navigateToPage(message.data['page']);
@@ -144,6 +159,7 @@ class MyApp extends StatelessWidget {
       title: '로봇 관리 앱',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'SOYO',
       ),
       home: const CareBot(),
       routes: {
