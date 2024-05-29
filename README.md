@@ -1,16 +1,51 @@
-# myapps
+# Haesile - 해실이
 
-A new Flutter project.
+<!--프로젝트 대문 이미지-->
+![Project Title](github_img/project-title.png)
 
-## Getting Started
+<!--프로젝트 버튼-->
+# **>>**[Velog](https://velog.io/@dbsdnjs002/posts)**<<**
 
-This project is a starting point for a Flutter application.
+<!--목차-->
+# Table of Contents
+- [[1] Technologies](#1-technologies)
+- [[2] Getting Started](#2-getting-started)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# [1] Technologies
+
+- [Flutter](https://flutter.dev/) 3.22.1
+- [Xcode](https://developer.apple.com/kr/xcode/) 15.3
+- [Swift](https://spring.io/) 5.10
+- [Android-SDK](https://developer.android.com/studio?hl=ko) 34.0.0
+
+
+# [2] Getting Started
+
+## Installation
+Follow these steps to install the application:
+
+1. Clone the repository:
+    ```zsh
+    git clone https://github.com/CoderGangW/CareBot.git
+    cd myapps
+    ```
+
+2. Install dependencies:
+    ```zsh
+    flutter pub get
+    ```
+
+3. Run the app:
+    ```zsh
+    flutter run
+    ```
+
+## Configuration
+- Run a command in `Project root Directory`
+```zsh
+flutterfire configure
+```

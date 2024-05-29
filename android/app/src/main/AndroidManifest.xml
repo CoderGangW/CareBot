@@ -3,7 +3,7 @@
 
     <application
         android:name="${applicationName}"
-        android:label="carebot"
+        android:label="AIDMATE"
         android:icon="@mipmap/ic_launcher">
         
         <!-- Firebase messaging default notification channel -->
