@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:myapps/pages/loading_Screen.dart';
@@ -16,17 +17,25 @@ String errorMessage = "";
 
 Future<List<Map<String, String>>> getRobots(String username) async {
   final String url;
-  url = getApiUrl('/select/robots?username=$username');
-  // if (Platform.isAndroid) {
-  //   url = 'http://10.0.2.2/select/robots?username=$username';
-  // } else if (Platform.isIOS) {
-  //   url = 'http://127.0.0.1/select/robots?username=$username';
-  // } else {
-  //   throw UnsupportedError('지원되지 않는 환경입니다.');
-  // }
+  // url = getApiUrl('/select/robots');
+  if (Platform.isAndroid) {
+    url = 'http://10.0.2.2/select/robots';
+  } else if (Platform.isIOS) {
+    url = 'http://127.0.0.1/select/robots';
+  } else {
+    throw UnsupportedError('지원되지 않는 환경입니다.');
+  }
 
   try {
-    final response = await http.get(Uri.parse(url));
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'username': username,
+      }),
+    );
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       final List<Map<String, String>> robots = data
@@ -44,7 +53,7 @@ Future<List<Map<String, String>>> getRobots(String username) async {
       throw Exception(errorMessage);
     }
   } catch (e) {
-    throw Exception('Error: $e');
+    throw Exception("Error : $e");
   }
 }
 
@@ -92,10 +101,12 @@ class _HomePageState extends State<HomePage> {
         isLoading = false;
       });
     } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = 'API서버와 연결할 수 없습니다';
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -111,44 +122,99 @@ class _HomePageState extends State<HomePage> {
               ? Center(child: LoadingScreen())
               : robots.isEmpty
                   ? Center(
-                      child: Card(
-                        margin: EdgeInsets.all(16.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            errorMessage,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
+                      child: Container(
+                        padding: EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 140, 79, 255), // 배경색
+                          borderRadius: BorderRadius.circular(15.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset:
+                                  Offset(0, 6), // changes position of shadow
                             ),
-                          ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.cloud_off_rounded, // 잠금 아이콘
+                              size: 50,
+                              color: Colors.white,
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              errorMessage,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 10),
+                          ],
                         ),
                       ),
                     )
                   : RefreshIndicator(
                       onRefresh: _handleRefresh,
-                      child: SingleChildScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: robots.map((robot) {
-                              return RobotCard(
-                                robotName: robot['name']!,
-                                batteryLevel: robot['battery']!,
-                                status: robot['status']!,
-                                serial: robot['serial']!,
-                              );
-                            }).toList(),
+                      child: Center(
+                        child: SingleChildScrollView(
+                          physics: AlwaysScrollableScrollPhysics(),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: robots.map((robot) {
+                                return RobotCard(
+                                  robotName: robot['name']!,
+                                  batteryLevel: robot['battery']!,
+                                  status: robot['status']!,
+                                  serial: robot['serial']!,
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
-                      ),
-                    )
+                      ))
           : Center(
-              child: Text(
-                '로봇을 보려면 로그인 해주세요!',
-                style: TextStyle(fontSize: 18),
+              child: Container(
+                padding: EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 140, 79, 255), // 배경색
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.lock_outline, // 잠금 아이콘
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '로봇을 보려면 로그인 해주세요!',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      child: Text(
+                        '로그인',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
       floatingActionButton: isLoggedIn

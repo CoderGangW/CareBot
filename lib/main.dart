@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -45,23 +46,25 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print('Firebase initialized successfully');
+    print('D - Firebase initialized successfully');
   } catch (e) {
-    print('Error initializing Firebase: $e');
+    print('E - Error initializing Firebase: $e');
     return;
   }
 
   _permissionWithNotification();
 
   try {
-    String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-    print('APNS Token: $apnsToken');
+    if (Platform.isIOS) {
+      String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      print('I - APNS Token: $apnsToken');
+    }
 
     String? token = await FirebaseMessaging.instance.getToken();
-    print("FCM token : $token");
+    print("I - FCM token : $token");
     FCM_TOKEN = token!;
   } catch (e) {
-    print('Error getting FCM token: $e');
+    print('E - Error getting FCM token: $e');
   }
 
   final AndroidInitializationSettings initializationSettingsAndroid =
@@ -89,9 +92,9 @@ void main() async {
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
-    print('Local notifications initialized successfully');
+    print('D - Local notifications initialized successfully');
   } catch (e) {
-    print('Error initializing local notifications: $e');
+    print('E - Error initializing local notifications: $e');
   }
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -196,29 +199,30 @@ class _CareBotState extends State<CareBot> {
             if (currentPageIndex != index) {
               _pageController.animateToPage(
                 index,
-                duration: const Duration(milliseconds: 250),
+                duration: const Duration(milliseconds: 150),
                 curve: Curves.easeOut,
               );
             }
           },
-          indicatorColor: Colors.deepPurpleAccent,
+          indicatorShape: CircleBorder(),
+          indicatorColor: Color.fromARGB(255, 133, 46, 255),
           selectedIndex: currentPageIndex,
-          backgroundColor: Colors.black12,
+          backgroundColor: Color.fromARGB(0, 70, 70, 70),
           destinations: const <Widget>[
             NavigationDestination(
               selectedIcon: Icon(Icons.notifications, color: Colors.white),
               icon: Badge(child: Icon(Icons.notifications)),
-              label: '알림',
+              label: "",
             ),
             NavigationDestination(
               selectedIcon: Icon(Icons.home, color: Colors.white),
               icon: Icon(Icons.home),
-              label: '홈',
+              label: "",
             ),
             NavigationDestination(
               selectedIcon: Icon(Icons.more_horiz, color: Colors.white),
               icon: Icon(Icons.more_horiz),
-              label: '더보기',
+              label: '',
             ),
           ],
         ),

@@ -88,7 +88,8 @@ class _SearchOrganizationPageState extends State<SearchOrganizationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("소속 검색"),
+        title: Text("기관 검색"),
+        centerTitle: true,
       ),
       body: Padding(
         padding: EdgeInsets.all(20),

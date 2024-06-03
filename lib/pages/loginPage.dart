@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapps/main.dart';
+import 'package:myapps/pages/loading_Screen.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -21,15 +22,17 @@ class _LoginPageState extends State<loginPage> {
   bool _isLoading = false;
 
   Future<void> login(String id, String pass) async {
-    final String url = getApiUrl('/select/login');
-    // final String url;
-    // if (Platform.isAndroid) {
-    //   url = 'http://10.0.2.2/select/login';
-    // } else if (Platform.isIOS) {
-    //   url = 'http://127.0.0.1/select/login';
-    // } else {
-    //   throw UnsupportedError('지원되지 않는 환경입니다.');
-    // }
+    final String url;
+
+    // url = getApiUrl('/select/login');
+
+    if (Platform.isAndroid) {
+      url = 'http://10.0.2.2/select/login';
+    } else if (Platform.isIOS) {
+      url = 'http://127.0.0.1/select/login';
+    } else {
+      throw UnsupportedError('지원되지 않는 환경입니다.');
+    }
 
     final headers = {
       'Content-Type': 'application/json',
@@ -59,7 +62,7 @@ class _LoginPageState extends State<loginPage> {
       if (response.statusCode == 200) {
         print('Login successful');
         await saveLoginState(true, id);
-        Navigator.pushNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/');
       } else {
         print('Failed to login: ${response.body}');
         QuickAlert.show(
@@ -92,79 +95,120 @@ class _LoginPageState extends State<loginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(""),
-      ),
-      body: SafeArea(
-        child: _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "로그인",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 30),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                    child: TextField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "이메일",
-                        labelText: "이메일",
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                    child: TextField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "비밀번호",
-                        labelText: "비밀번호",
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      final email = _emailController.text;
-                      final password = _passwordController.text;
-                      login(email, password);
-                    },
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      child: Text(
+        appBar: AppBar(
+          title: Text(""),
+        ),
+        body: SafeArea(
+          child: _isLoading
+              ? Center(child: LoadingScreen())
+              : Center(
+                  child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
                         "로그인",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
-                    ),
+                      SizedBox(height: 30),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                        child: TextField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            hintText: "이메일",
+                            prefixIcon: Icon(Icons.email),
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                        child: TextField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            hintText: "비밀번호",
+                            prefixIcon: Icon(Icons.lock),
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          final email = _emailController.text;
+                          final password = _passwordController.text;
+                          login(email, password);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Color.fromARGB(255, 0, 0, 0),
+                          backgroundColor: Color.fromARGB(255, 140, 79, 255),
+                          shadowColor: Color.fromARGB(0, 43, 0, 81),
+                          elevation: 5.0,
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width * 0.35,
+                              right: MediaQuery.of(context).size.width * 0.35,
+                              top: 20,
+                              bottom: 20),
+                          side: BorderSide(
+                            color: Color.fromARGB(255, 168, 121, 255),
+                            width: 4.0,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                        child: Text(
+                          "    로그인    ",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/login/signup');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Color.fromARGB(255, 0, 0, 0),
+                          backgroundColor: Color.fromARGB(255, 140, 79, 255),
+                          shadowColor: Color.fromARGB(0, 0, 0, 0),
+                          elevation: 5.0,
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width * 0.35,
+                              right: MediaQuery.of(context).size.width * 0.35,
+                              top: 3,
+                              bottom: 3),
+                          side: BorderSide(
+                            color: Color.fromARGB(255, 168, 121, 255),
+                            width: 4.0,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          child: Text(
+                            "회원가입",
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/login/signup');
-                    },
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Text(
-                        "회원가입",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-      ),
-    );
+                )),
+        ));
   }
 }

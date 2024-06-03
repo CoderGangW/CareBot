@@ -54,6 +54,7 @@ dependencies:
   shared_preferences: ^2.2.3
   flutter_dialogs: ^3.0.0
   multi_masked_formatter: ^1.0.0
+  metaballs: ^1.5.0
 
 dev_dependencies:
   flutter_test:
@@ -114,3 +115,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+

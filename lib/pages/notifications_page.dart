@@ -23,7 +23,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   void initState() {
     super.initState();
-    _notifications = fetchNotifications();
+    _refreshNotifications();
+  }
+
+  Future<void> _refreshNotifications() async {
+    setState(() {
+      _notifications = fetchNotifications();
+    });
   }
 
   Future<List<NotificationItem>> fetchNotifications() async {
@@ -33,14 +39,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     final String url;
 
-    url = getApiUrl('/select/notifications');
-    //   if (Platform.isAndroid) {
-    //   url = 'http://10.0.2.2/select/robots?username=$username';
-    // } else if (Platform.isIOS) {
-    //   url = 'http://127.0.0.1/select/robots?username=$username';
-    // } else {
-    //   throw UnsupportedError('지원되지 않는 환경입니다.');
-    // }
+    // url = getApiUrl('/select/facility-notifications');
+    if (Platform.isAndroid) {
+      url = 'http://10.0.2.2/select/facility-notifications';
+    } else if (Platform.isIOS) {
+      url = 'http://127.0.0.1/select/facility-notifications';
+    } else {
+      throw UnsupportedError('지원되지 않는 환경입니다.');
+    }
 
     final response = await http.post(
       Uri.parse(url),
@@ -54,6 +60,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
+      print(jsonResponse);
       return jsonResponse
           .map((data) => NotificationItem.fromJson(data))
           .toList();
@@ -64,35 +71,39 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: FutureBuilder<List<NotificationItem>>(
-        future: _notifications,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: LoadingScreen());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('알림데이터를 받아오는데 실패했습니다.'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('알림이 없습니다.'));
-          } else {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                var notification = snapshot.data![index];
-                return Card(
-                  child: ListTile(
-                    leading: Icon(Icons.notifications_sharp),
-                    title: Text(notification.title),
-                    subtitle: Text(notification.subtitle),
-                  ),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: RefreshIndicator(
+          onRefresh: _refreshNotifications,
+          child: FutureBuilder<List<NotificationItem>>(
+            future: _notifications,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: LoadingScreen());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('알림데이터를 받아오는데 실패했습니다.'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('알림이 없습니다.'));
+              } else {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    var notification = snapshot.data![index];
+                    return Card(
+                      child: ListTile(
+                        leading: Icon(Icons.notifications_sharp),
+                        title: Text(notification.title),
+                        subtitle: Text(
+                            '${notification.subtitle}\n${notification.datetime}'),
+                      ),
+                    );
+                  },
                 );
-              },
-            );
-          }
-        },
+              }
+            },
+          ),
+        ),
       ),
     );
   }
@@ -101,13 +112,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
 class NotificationItem {
   final String title;
   final String subtitle;
+  final String datetime;
 
-  NotificationItem({required this.title, required this.subtitle});
+  NotificationItem(
+      {required this.title, required this.subtitle, required this.datetime});
 
   factory NotificationItem.fromJson(Map<String, dynamic> json) {
     return NotificationItem(
-      title: json['title'],
-      subtitle: json['subtitle'],
+      title: json['no_title'],
+      subtitle: json['no_contents'],
+      datetime: json['time_stamp'],
     );
   }
 }

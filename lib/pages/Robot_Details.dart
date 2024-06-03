@@ -51,15 +51,15 @@ class _RobotDetailsState extends State<robotdetails> {
   }
 
   Future<void> _fetchRobotDetails() async {
-    final String url = getApiUrl('/select/robotinfo');
-    // String url;
-    // if (Platform.isAndroid) {
-    //   url = 'http://10.0.2.2/select/robotinfo';
-    // } else if (Platform.isIOS) {
-    //   url = 'http://127.0.0.1/select/robotinfo';
-    // } else {
-    //   throw UnsupportedError('지원되지 않는 환경입니다.');
-    // }
+    //final String url = getApiUrl('/select/robotinfo');
+    String url;
+    if (Platform.isAndroid) {
+      url = 'http://10.0.2.2/select/robotinfo';
+    } else if (Platform.isIOS) {
+      url = 'http://127.0.0.1/select/robotinfo';
+    } else {
+      throw UnsupportedError('지원되지 않는 환경입니다.');
+    }
 
     final response = await http.post(
       Uri.parse(url),
@@ -96,15 +96,16 @@ class _RobotDetailsState extends State<robotdetails> {
 
   Future<void> _updateRobotDetails() async {
     final String url;
-    url = getApiUrl('/update/robotname');
 
-    // if (Platform.isAndroid) {
-    //   url = 'http://10.0.2.2/update/robotname';
-    // } else if (Platform.isIOS) {
-    //   url = 'http://127.0.0.1/update/robotname';
-    // } else {
-    //   throw UnsupportedError('지원되지 않는 환경입니다.');
-    // }
+    // url = getApiUrl('/update/robotname');
+
+    if (Platform.isAndroid) {
+      url = 'http://10.0.2.2/update/robotname';
+    } else if (Platform.isIOS) {
+      url = 'http://127.0.0.1/update/robotname';
+    } else {
+      throw UnsupportedError('지원되지 않는 환경입니다.');
+    }
 
     final response = await http.post(
       Uri.parse(url),
@@ -202,32 +203,13 @@ class _RobotDetailsState extends State<robotdetails> {
           IconButton(
             icon: Icon(Icons.info),
             onPressed: () {
-              final overlay = Overlay.of(context);
-              final overlayEntry = OverlayEntry(
-                builder: (context) => Positioned(
-                  top: 105.0,
-                  right: 10.0,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Container(
-                      padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Text(
-                        '시리얼 번호: $serial',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(
+                  '로봇 시리얼 : $serial',
+                  textAlign: TextAlign.center,
+                )),
               );
-
-              overlay?.insert(overlayEntry);
-              Future.delayed(Duration(seconds: 2), () {
-                overlayEntry.remove();
-              });
             },
             tooltip: '로봇 정보',
           ),

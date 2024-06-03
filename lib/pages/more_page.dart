@@ -4,7 +4,7 @@ import 'package:myapps/main.dart' as user;
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool notistate = true;
-var appVersion = "Alpha 1.0.0";
+const appVersion = "Alpha 1.5.9";
 
 class MorePage extends StatefulWidget {
   const MorePage({Key? key}) : super(key: key);
@@ -44,7 +44,8 @@ class _MorePageState extends State<MorePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Scaffold(
+        body: Padding(
       padding: const EdgeInsets.all(15.0),
       child: ListView(
         children: <Widget>[
@@ -62,7 +63,7 @@ class _MorePageState extends State<MorePage> {
               radius: 50,
               backgroundColor: Colors.deepPurpleAccent,
               child: CircleAvatar(
-                radius: 48,
+                radius: 47,
                 backgroundColor: Colors.white,
                 child: ClipOval(
                   child: Image.asset(
@@ -124,6 +125,31 @@ class _MorePageState extends State<MorePage> {
                 setState(() {
                   notistate = !notistate;
                   print("1 : $notistate");
+                  if (notistate) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Color.fromARGB(255, 136, 255, 128),
+                        duration: const Duration(milliseconds: 500),
+                        content: Text(
+                          '알림을 받습니다!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Color.fromARGB(255, 255, 128, 128),
+                        duration: const Duration(milliseconds: 500),
+                        content: Text(
+                          '알림을 받지 않습니다!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    );
+                  }
                 });
               },
               style: ElevatedButton.styleFrom(
@@ -142,6 +168,31 @@ class _MorePageState extends State<MorePage> {
                     setState(() {
                       notistate = value;
                       print("2 : $notistate");
+                      if (notistate) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Color.fromARGB(255, 136, 255, 128),
+                            duration: const Duration(milliseconds: 500),
+                            content: Text(
+                              '알림을 받습니다!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Color.fromARGB(255, 255, 128, 128),
+                            duration: const Duration(milliseconds: 500),
+                            content: Text(
+                              '알림을 받지 않습니다!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        );
+                      }
                     });
                   },
                 ),
@@ -179,45 +230,49 @@ class _MorePageState extends State<MorePage> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildButton_myrobot(BuildContext context, int index,
       List<IconData> iconList, List btnTitle, List ctsTitle, List ctsSubTitle) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ElevatedButton(
-        onPressed: () {
-          if (index == 0) {
-            Navigator.pushNamed(context, "/addRobot");
-          } else {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('닫기'),
-                  )
-                ],
-                title: Text(ctsTitle[index]),
-                content: Text(ctsSubTitle[index]),
-              ),
-            );
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+    if (!_isLoggedIn && index == 0) {
+      return SizedBox();
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: ElevatedButton(
+          onPressed: () {
+            if (index == 0) {
+              Navigator.pushNamed(context, "/addRobot");
+            } else {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('닫기'),
+                    )
+                  ],
+                  title: Text(ctsTitle[index]),
+                  content: Text(ctsSubTitle[index]),
+                ),
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            backgroundColor: Colors.white,
           ),
-          backgroundColor: Colors.white,
+          child: ListTile(
+              leading: Icon(iconList[index]), title: Text(btnTitle[index])),
         ),
-        child: ListTile(
-            leading: Icon(iconList[index]), title: Text(btnTitle[index])),
-      ),
-    );
+      );
+    }
   }
 
   Widget _buildButton_appinfo(BuildContext context, int index,

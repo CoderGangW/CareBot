@@ -7,11 +7,11 @@ class LoadingScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         // child: LoadingAnimationWidget.discreteCircle(
-        child: LoadingAnimationWidget.stretchedDots(
+        child: LoadingAnimationWidget.fourRotatingDots(
           // thirdRingColor: Color.fromARGB(255, 212, 157, 255),
           // secondRingColor: Color.fromARGB(255, 186, 95, 255),
           color: Color.fromARGB(255, 144, 0, 255),
-          size: 100,
+          size: 50,
         ),
       ),
     );
