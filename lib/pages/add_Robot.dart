@@ -40,13 +40,15 @@ class _AddRobotState extends State<addRobot> {
     final String serial = _serialController.text;
     final String url;
 
-    if (Platform.isAndroid) {
-      url = 'http://10.0.2.2/update/addRobot';
-    } else if (Platform.isIOS) {
-      url = 'http://127.0.0.1/update/addRobot';
-    } else {
-      throw UnsupportedError('지원되지 않는 환경입니다.');
-    }
+    url = getApiUrl('/update/addRobot');
+
+    // if (Platform.isAndroid) {
+    //   url = 'http://10.0.2.2/update/addRobot';
+    // } else if (Platform.isIOS) {
+    //   url = 'http://127.0.0.1/update/addRobot';
+    // } else {
+    //   throw UnsupportedError('지원되지 않는 환경입니다.');
+    // }
 
     final response = await http.post(
       Uri.parse(url),
@@ -97,52 +99,50 @@ class _AddRobotState extends State<addRobot> {
         centerTitle: true,
       ),
       body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.35,
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: TextField(
-                  controller: _serialController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "시리얼 넘버 입력",
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextField(
+                    controller: _serialController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "시리얼 넘버 입력",
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _robotEnroll(context);
-                Navigator.pushNamed(context, '/');
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Color.fromARGB(255, 0, 0, 0),
-                backgroundColor: Color.fromARGB(255, 140, 79, 255),
-                shadowColor: Color.fromARGB(0, 43, 0, 81),
-                elevation: 5.0,
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
+              SizedBox(height: 50),
+              ElevatedButton(
+                onPressed: () {
+                  _robotEnroll(context);
+                  Navigator.pushNamed(context, '/');
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Color.fromARGB(255, 0, 0, 0),
+                  backgroundColor: Color.fromARGB(255, 140, 79, 255),
+                  shadowColor: Color.fromARGB(0, 43, 0, 81),
+                  elevation: 5.0,
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+                child: Text(
+                  " 로봇 추가 ",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              child: Text(
-                " 로봇 추가 ",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.12),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -24,15 +24,15 @@ class _LoginPageState extends State<loginPage> {
   Future<void> login(String id, String pass) async {
     final String url;
 
-    // url = getApiUrl('/select/login');
+    url = getApiUrl('/select/login');
 
-    if (Platform.isAndroid) {
-      url = 'http://10.0.2.2/select/login';
-    } else if (Platform.isIOS) {
-      url = 'http://127.0.0.1/select/login';
-    } else {
-      throw UnsupportedError('지원되지 않는 환경입니다.');
-    }
+    // if (Platform.isAndroid) {
+    //   url = 'http://10.0.2.2/select/login';
+    // } else if (Platform.isIOS) {
+    //   url = 'http://127.0.0.1/select/login';
+    // } else {
+    //   throw UnsupportedError('지원되지 않는 환경입니다.');
+    // }
 
     final headers = {
       'Content-Type': 'application/json',

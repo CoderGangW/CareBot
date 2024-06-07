@@ -3,7 +3,7 @@
 
     <application
         android:name="${applicationName}"
-        android:label="AIDMATE"
+        android:label="Haesil"
         android:icon="@mipmap/ic_launcher">
         
         <!-- Firebase messaging default notification channel -->

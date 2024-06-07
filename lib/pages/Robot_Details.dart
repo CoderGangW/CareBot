@@ -51,15 +51,15 @@ class _RobotDetailsState extends State<robotdetails> {
   }
 
   Future<void> _fetchRobotDetails() async {
-    //final String url = getApiUrl('/select/robotinfo');
-    String url;
-    if (Platform.isAndroid) {
-      url = 'http://10.0.2.2/select/robotinfo';
-    } else if (Platform.isIOS) {
-      url = 'http://127.0.0.1/select/robotinfo';
-    } else {
-      throw UnsupportedError('지원되지 않는 환경입니다.');
-    }
+    final String url = getApiUrl('/select/robotinfo');
+    // String url;
+    // if (Platform.isAndroid) {
+    //   url = 'http://10.0.2.2/select/robotinfo';
+    // } else if (Platform.isIOS) {
+    //   url = 'http://127.0.0.1/select/robotinfo';
+    // } else {
+    //   throw UnsupportedError('지원되지 않는 환경입니다.');
+    // }
 
     final response = await http.post(
       Uri.parse(url),

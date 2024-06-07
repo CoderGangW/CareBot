@@ -17,14 +17,14 @@ String errorMessage = "";
 
 Future<List<Map<String, String>>> getRobots(String username) async {
   final String url;
-  // url = getApiUrl('/select/robots');
-  if (Platform.isAndroid) {
-    url = 'http://10.0.2.2/select/robots';
-  } else if (Platform.isIOS) {
-    url = 'http://127.0.0.1/select/robots';
-  } else {
-    throw UnsupportedError('지원되지 않는 환경입니다.');
-  }
+  url = getApiUrl('/select/robots');
+  // if (Platform.isAndroid) {
+  //   url = 'http://10.0.2.2/select/robots';
+  // } else if (Platform.isIOS) {
+  //   url = 'http://127.0.0.1/select/robots';
+  // } else {
+  //   throw UnsupportedError('지원되지 않는 환경입니다.');
+  // }
 
   try {
     final response = await http.post(

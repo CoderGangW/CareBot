@@ -39,14 +39,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     final String url;
 
-    // url = getApiUrl('/select/facility-notifications');
-    if (Platform.isAndroid) {
-      url = 'http://10.0.2.2/select/facility-notifications';
-    } else if (Platform.isIOS) {
-      url = 'http://127.0.0.1/select/facility-notifications';
-    } else {
-      throw UnsupportedError('지원되지 않는 환경입니다.');
-    }
+    url = getApiUrl('/select/facility-notifications');
+    // if (Platform.isAndroid) {
+    //   url = 'http://10.0.2.2/select/facility-notifications';
+    // } else if (Platform.isIOS) {
+    //   url = 'http://127.0.0.1/select/facility-notifications';
+    // } else {
+    //   throw UnsupportedError('지원되지 않는 환경입니다.');
+    // }
 
     final response = await http.post(
       Uri.parse(url),
@@ -82,7 +82,44 @@ class _NotificationsPageState extends State<NotificationsPage> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: LoadingScreen());
               } else if (snapshot.hasError) {
-                return Center(child: Text('알림데이터를 받아오는데 실패했습니다.'));
+                return Center(
+                  child: Container(
+                    padding: EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 140, 79, 255), // 배경색
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.lock_outline, // 잠금 아이콘
+                          size: 50,
+                          color: Colors.white,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          '알림 내역을 보려면 로그인 해야합니다!',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/login');
+                          },
+                          child: Text(
+                            '로그인',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return Center(child: Text('알림이 없습니다.'));
               } else {

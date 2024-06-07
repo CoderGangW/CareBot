@@ -4,7 +4,7 @@ import 'package:myapps/main.dart' as user;
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool notistate = true;
-const appVersion = "Alpha 1.5.9";
+const appVersion = "Alpha 1.6.0";
 
 class MorePage extends StatefulWidget {
   const MorePage({Key? key}) : super(key: key);
