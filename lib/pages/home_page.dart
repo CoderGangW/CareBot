@@ -306,9 +306,7 @@ class RobotCard extends StatelessWidget {
             arguments: {
               'serial': serial,
             },
-          ).then((_) {
-            Navigator.pushReplacementNamed(context, '/');
-          });
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(16.0),

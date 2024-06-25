@@ -81,7 +81,6 @@ class _SignUpPageState extends State<signupPage> {
     });
 
     if (response.statusCode == 201) {
-      print('User registered successfully');
       Navigator.pushNamed(context, '/login');
     } else if (response.statusCode == 409) {
       QuickAlert.show(
@@ -102,7 +101,6 @@ class _SignUpPageState extends State<signupPage> {
         confirmBtnColor: Colors.deepPurple,
         animType: QuickAlertAnimType.slideInUp,
       );
-      print('Failed to register user: ${response.body}');
     }
   }
 

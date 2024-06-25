@@ -42,7 +42,6 @@ class _LoginPageState extends State<loginPage> {
       'id': id,
       'password': pass,
     });
-    print(id);
 
     try {
       setState(() {
@@ -60,11 +59,9 @@ class _LoginPageState extends State<loginPage> {
       });
 
       if (response.statusCode == 200) {
-        print('Login successful');
         await saveLoginState(true, id);
         Navigator.pushReplacementNamed(context, '/');
       } else {
-        print('Failed to login: ${response.body}');
         QuickAlert.show(
           context: context,
           type: QuickAlertType.error,
@@ -76,7 +73,6 @@ class _LoginPageState extends State<loginPage> {
       setState(() {
         _isLoading = false;
       });
-      print('Error during login: $e');
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,

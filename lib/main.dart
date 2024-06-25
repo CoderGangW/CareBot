@@ -210,18 +210,29 @@ class _CareBotState extends State<CareBot> {
           backgroundColor: Color.fromARGB(0, 70, 70, 70),
           destinations: const <Widget>[
             NavigationDestination(
-              selectedIcon: Icon(Icons.notifications, color: Colors.white),
-              icon: Badge(child: Icon(Icons.notifications)),
+              selectedIcon:
+                  Icon(Icons.notifications_rounded, color: Colors.white),
+              icon: Badge(
+                  child: Icon(
+                Icons.notifications_rounded,
+                size: 30,
+              )),
               label: "",
             ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.home, color: Colors.white),
-              icon: Icon(Icons.home),
+              selectedIcon: Icon(Icons.home_rounded, color: Colors.white),
+              icon: Icon(
+                Icons.home_rounded,
+                size: 30,
+              ),
               label: "",
             ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.more_horiz, color: Colors.white),
-              icon: Icon(Icons.more_horiz),
+              selectedIcon: Icon(Icons.more_horiz_rounded, color: Colors.white),
+              icon: Icon(
+                Icons.more_horiz_rounded,
+                size: 30,
+              ),
               label: '',
             ),
           ],

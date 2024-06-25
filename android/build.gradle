@@ -1,3 +1,16 @@
+buildscript {
+    ext.kotlin_version = '1.8.21' // 여기서 Kotlin 버전을 1.8.21로 업데이트
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.gms:google-services:4.3.10'
+    }
+}
+
 allprojects {
     repositories {
         google()

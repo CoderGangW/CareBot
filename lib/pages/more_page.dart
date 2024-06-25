@@ -4,7 +4,7 @@ import 'package:myapps/main.dart' as user;
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool notistate = true;
-const appVersion = "Alpha 1.6.0";
+const appVersion = "Alpha 1.6.3";
 
 class MorePage extends StatefulWidget {
   const MorePage({Key? key}) : super(key: key);
@@ -124,7 +124,6 @@ class _MorePageState extends State<MorePage> {
               onPressed: () {
                 setState(() {
                   notistate = !notistate;
-                  print("1 : $notistate");
                   if (notistate) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -167,7 +166,6 @@ class _MorePageState extends State<MorePage> {
                   onChanged: (bool value) {
                     setState(() {
                       notistate = value;
-                      print("2 : $notistate");
                       if (notistate) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

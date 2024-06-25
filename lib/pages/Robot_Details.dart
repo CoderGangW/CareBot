@@ -97,15 +97,15 @@ class _RobotDetailsState extends State<robotdetails> {
   Future<void> _updateRobotDetails() async {
     final String url;
 
-    // url = getApiUrl('/update/robotname');
+    url = getApiUrl('/update/robotname');
 
-    if (Platform.isAndroid) {
-      url = 'http://10.0.2.2/update/robotname';
-    } else if (Platform.isIOS) {
-      url = 'http://127.0.0.1/update/robotname';
-    } else {
-      throw UnsupportedError('지원되지 않는 환경입니다.');
-    }
+    // if (Platform.isAndroid) {
+    //   url = 'http://10.0.2.2/update/robotname';
+    // } else if (Platform.isIOS) {
+    //   url = 'http://127.0.0.1/update/robotname';
+    // } else {
+    //   throw UnsupportedError('지원되지 않는 환경입니다.');
+    // }
 
     final response = await http.post(
       Uri.parse(url),
