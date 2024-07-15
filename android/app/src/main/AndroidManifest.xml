@@ -9,7 +9,7 @@
         <!-- Firebase messaging default notification channel -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="high_importance_channel" />
+            android:value="haesil_notification_channel" />
         
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

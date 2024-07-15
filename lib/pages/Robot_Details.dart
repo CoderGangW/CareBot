@@ -193,12 +193,18 @@ class _RobotDetailsState extends State<robotdetails> {
       appBar: AppBar(
         centerTitle: true,
         title: GestureDetector(
-          onTap: _showEditDialog,
-          child: Text(
-            textAlign: TextAlign.center,
-            robotName,
-          ),
-        ),
+            onTap: _showEditDialog,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  textAlign: TextAlign.center,
+                  robotName,
+                ),
+                Icon(Icons.create_rounded)
+              ],
+            )),
         actions: [
           IconButton(
             icon: Icon(Icons.info),

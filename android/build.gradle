@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.8.21' // 여기서 Kotlin 버전을 1.8.21로 업데이트
+    ext.kotlin_version = '1.8.0' // 여기서 Kotlin 버전을 1.8.21로 업데이트
     repositories {
         google()
         mavenCentral()

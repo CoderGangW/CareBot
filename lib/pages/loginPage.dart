@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:myapps/security/confAPI.dart';
+import 'package:myapps/main.dart' as getFCMtoken;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,7 +22,7 @@ class _LoginPageState extends State<loginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  Future<void> login(String id, String pass) async {
+  Future<void> login(String id, String pass, String fcm) async {
     final String url;
 
     url = getApiUrl('/select/login');
@@ -41,6 +42,7 @@ class _LoginPageState extends State<loginPage> {
     final bodyData = jsonEncode({
       'id': id,
       'password': pass,
+      'fcm_token': fcm,
     });
 
     try {
@@ -74,11 +76,11 @@ class _LoginPageState extends State<loginPage> {
         _isLoading = false;
       });
       QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        title: '이런..',
-        text: '로그인을 하는 도중 오류가 생겼습니다. 다시 시도해주세요.',
-      );
+          context: context,
+          type: QuickAlertType.error,
+          title: '이런..',
+          text: '로그인을 하는 도중 오류가 생겼습니다. 다시 시도해주세요.',
+          confirmBtnText: '닫기');
     }
   }
 
@@ -139,7 +141,7 @@ class _LoginPageState extends State<loginPage> {
                         onPressed: () {
                           final email = _emailController.text;
                           final password = _passwordController.text;
-                          login(email, password);
+                          login(email, password, getFCMtoken.FCM_TOKEN);
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Color.fromARGB(255, 0, 0, 0),
@@ -167,38 +169,17 @@ class _LoginPageState extends State<loginPage> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height: 10),
-                      ElevatedButton(
+                      SizedBox(height: 20),
+                      TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/login/signup');
                         },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Color.fromARGB(255, 0, 0, 0),
-                          backgroundColor: Color.fromARGB(255, 140, 79, 255),
-                          shadowColor: Color.fromARGB(0, 0, 0, 0),
-                          elevation: 5.0,
-                          padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.35,
-                              right: MediaQuery.of(context).size.width * 0.35,
-                              top: 3,
-                              bottom: 3),
-                          side: BorderSide(
-                            color: Color.fromARGB(255, 168, 121, 255),
-                            width: 4.0,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          child: Text(
-                            "회원가입",
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                        child: Text(
+                          "계정이 없나요?",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            decoration: TextDecoration.underline, // 밑줄 추가
                           ),
                         ),
                       )

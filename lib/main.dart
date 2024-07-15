@@ -121,9 +121,9 @@ void main() async {
 Future<void> _showNotification(RemoteNotification notification) async {
   final AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
-    'high_importance_channel',
-    'FCM 알림',
-    channelDescription: 'your channel description',
+    'haesil_notification_channel',
+    '해실이의 알림',
+    channelDescription: '해실이가 알림이 발생하면 알려줘요!',
     importance: Importance.max,
     priority: Priority.high,
   );
@@ -162,6 +162,7 @@ class MyApp extends StatelessWidget {
       title: '로봇 관리 앱',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
         fontFamily: 'SOYO',
       ),
       home: const CareBot(),
