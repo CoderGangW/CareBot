@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:myapps/pages/loading_Screen.dart';
 import 'package:myapps/security/confAPI.dart';
 import 'dart:convert';
@@ -44,7 +46,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   Future<List<NotificationItem>> fetchNotifications() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? username = prefs.getString('username');
+    String? useremail = prefs.getString('user_email');
 
     final String url = getApiUrl('/select/facility-notifications');
 
@@ -54,7 +56,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'username': username ?? '',
+        'username': useremail ?? '',
       }),
     );
 
@@ -159,11 +161,63 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     itemBuilder: (context, index) {
                       var notification = snapshot.data![index];
                       return Card(
-                        child: ListTile(
-                          leading: Icon(Icons.notifications_sharp),
-                          title: Text(notification.title),
-                          subtitle: Text(
-                              '${notification.subtitle}\n${notification.datetime}'),
+                        elevation: 3.0,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.notifications,
+                                    color: Color.fromARGB(255, 206, 183, 37),
+                                    size: 24.0,
+                                  ),
+                                  SizedBox(width: 8.0),
+                                  Text(
+                                    notification.title,
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8.0),
+
+                              // 내용 부분
+                              Text(
+                                notification.subtitle,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                              SizedBox(height: 8.0),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Icon(
+                                    Icons.access_time,
+                                    color: Colors.grey,
+                                    size: 16.0,
+                                  ),
+                                  SizedBox(width: 5.0),
+                                  Text(
+                                    notification.getRelativeTime(),
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -179,18 +233,61 @@ class _NotificationsPageState extends State<NotificationsPage> {
 }
 
 class NotificationItem {
+  final int noId;
+  final int faId;
+  final int noLevel;
   final String title;
   final String subtitle;
-  final String datetime;
+  final DateTime datetime;
 
-  NotificationItem(
-      {required this.title, required this.subtitle, required this.datetime});
+  NotificationItem({
+    required this.noId,
+    required this.faId,
+    required this.noLevel,
+    required this.title,
+    required this.subtitle,
+    required this.datetime,
+  });
 
   factory NotificationItem.fromJson(Map<String, dynamic> json) {
+    // 서버 시간에서 'Z' 제거 후 파싱
+    String timeStamp = json['time_stamp'] as String;
+    if (timeStamp.endsWith('Z')) {
+      timeStamp = timeStamp.substring(0, timeStamp.length - 1);
+    }
+
     return NotificationItem(
+      noId: json['no_id'],
+      faId: json['fa_id'],
+      noLevel: json['no_level'],
       title: json['no_title'],
       subtitle: json['no_contents'],
-      datetime: json['time_stamp'],
+      datetime: DateTime.parse(timeStamp),
     );
+  }
+
+  String getFormattedDate() {
+    final DateFormat formatter = DateFormat('yyyy년MM월dd일 HH시mm분ss초');
+    return formatter.format(datetime);
+  }
+
+  String getRelativeTime() {
+    final now = DateTime.now();
+    final difference = now.difference(datetime);
+
+    final seconds = difference.inSeconds;
+    if (seconds < 60) {
+      return '방금 전';
+    } else if (seconds < 3600) {
+      return '${(seconds / 60).floor()}분 전';
+    } else if (seconds < 86400) {
+      return '${(seconds / 3600).floor()}시간 전';
+    } else if (seconds < 2592000) {
+      return '${(seconds / 86400).floor()}일 전';
+    } else if (seconds < 31536000) {
+      return '${(seconds / 2592000).floor()}개월 전';
+    } else {
+      return '${(seconds / 31536000).floor()}년 전';
+    }
   }
 }

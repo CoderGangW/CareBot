@@ -61,17 +61,24 @@ class _LoginPageState extends State<loginPage> {
       });
 
       if (response.statusCode == 200) {
-        await saveLoginState(true, id);
+        var responseData = json.decode(response.body);
+        await saveLoginState(
+            true,
+            responseData['userEmail'],
+            responseData['userName'],
+            responseData['userPhone'],
+            responseData['userOrganization']);
         Navigator.pushReplacementNamed(context, '/');
       } else {
         QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          title: '로그인 실패',
-          text: response.body,
-        );
+            context: context,
+            type: QuickAlertType.error,
+            title: '로그인 실패',
+            text: response.body,
+            confirmBtnText: "닫기");
       }
     } catch (e) {
+      debugPrint(e.toString());
       setState(() {
         _isLoading = false;
       });
@@ -84,16 +91,22 @@ class _LoginPageState extends State<loginPage> {
     }
   }
 
-  Future<void> saveLoginState(bool isLoggedIn, String id) async {
+  Future<void> saveLoginState(bool isLoggedIn, String U_email, String U_name,
+      String U_phone, int U_organization) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', isLoggedIn);
-    await prefs.setString('username', id);
+    await prefs.setString('user_email', U_email);
+    await prefs.setString('user_name', U_name);
+    await prefs.setString('user_phone', U_phone);
+    await prefs.setInt('user_organization', U_organization);
+    await prefs.setBool('isNotiState', true);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: Text(""),
         ),
         body: SafeArea(

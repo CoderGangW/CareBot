@@ -21,6 +21,7 @@
 - [Xcode](https://developer.apple.com/kr/xcode/) 15.3
 - [Swift](https://spring.io/) 5.10
 - [Android-SDK](https://developer.android.com/studio?hl=ko) 34.0.0
+- [Kotlin](https://kotlinlang.org/) 1.18.2
 
 
 # [2] Getting Started

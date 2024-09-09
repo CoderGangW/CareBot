@@ -143,6 +143,7 @@ class _SignUpPageState extends State<signupPage> {
     final double BtnHeight = MediaQuery.of(context).size.height * 0.02;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
           "회원가입",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -191,7 +192,7 @@ class _SignUpPageState extends State<signupPage> {
                           _buildTextFormField(
                             _confirmPasswordController,
                             "비밀번호 확인",
-                            "비밀번호 확인을 입력해주세요.",
+                            "비밀번호를 확인해주세요.",
                             obscureText: true,
                             onChanged: _validatePasswordMatch,
                             errorText:

@@ -9,6 +9,7 @@ class TermsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text("이용 약관"),
         centerTitle: true,
       ),

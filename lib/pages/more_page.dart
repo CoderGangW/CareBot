@@ -3,8 +3,7 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:myapps/main.dart' as user;
 import 'package:shared_preferences/shared_preferences.dart';
 
-bool notistate = true;
-const appVersion = "Alpha 1.7.0";
+const appVersion = "Alpha 2.1.0";
 
 class MorePage extends StatefulWidget {
   const MorePage({Key? key}) : super(key: key);
@@ -16,6 +15,7 @@ class MorePage extends StatefulWidget {
 class _MorePageState extends State<MorePage> {
   String _loggedInUser = "";
   bool _isLoggedIn = false;
+  bool _isNotiState = true;
 
   @override
   void initState() {
@@ -26,8 +26,9 @@ class _MorePageState extends State<MorePage> {
   Future<void> _loadLoggedInUser() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _loggedInUser = prefs.getString('username') ?? "";
+      _loggedInUser = prefs.getString('user_name') ?? "";
       _isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+      _isNotiState = prefs.getBool('isNotiState') ?? true;
     });
   }
 
@@ -55,7 +56,7 @@ class _MorePageState extends State<MorePage> {
               if (!_isLoggedIn) {
                 Navigator.pushNamed(context, '/login');
               } else {
-                _showLogoutDialog();
+                Navigator.pushNamed(context, '/account');
               }
             },
             customBorder: CircleBorder(),
@@ -122,9 +123,9 @@ class _MorePageState extends State<MorePage> {
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: ElevatedButton(
               onPressed: () {
-                setState(() {
-                  notistate = !notistate;
-                  if (notistate) {
+                setState(() async {
+                  _isNotiState = !_isNotiState;
+                  if (_isNotiState) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: Color.fromARGB(255, 136, 255, 128),
@@ -149,6 +150,8 @@ class _MorePageState extends State<MorePage> {
                       ),
                     );
                   }
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.setBool('isNotiState', _isNotiState);
                 });
               },
               style: ElevatedButton.styleFrom(
@@ -162,11 +165,11 @@ class _MorePageState extends State<MorePage> {
                 title: Text("알림설정"),
                 trailing: Switch.adaptive(
                   activeColor: Colors.deepPurple,
-                  value: notistate,
+                  value: _isNotiState,
                   onChanged: (bool value) {
-                    setState(() {
-                      notistate = value;
-                      if (notistate) {
+                    setState(() async {
+                      _isNotiState = value;
+                      if (_isNotiState) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: Color.fromARGB(255, 136, 255, 128),
@@ -191,6 +194,8 @@ class _MorePageState extends State<MorePage> {
                           ),
                         );
                       }
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.setBool('isNotiState', _isNotiState);
                     });
                   },
                 ),

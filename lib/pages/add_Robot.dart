@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:myapps/security/confAPI.dart';
 import 'package:http/http.dart' as http;
@@ -92,6 +91,7 @@ class _AddRobotState extends State<addRobot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
           "로봇 추가",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

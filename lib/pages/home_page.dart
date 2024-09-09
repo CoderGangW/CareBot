@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<Map<String, dynamic>> getLoginState() async {
   final prefs = await SharedPreferences.getInstance();
   final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  final username = prefs.getString('username') ?? '';
-  return {'isLoggedIn': isLoggedIn, 'username': username};
+  final useremail = prefs.getString('user_email') ?? '';
+  return {'isLoggedIn': isLoggedIn, 'user_email': useremail};
 }
 
 String errorMessage = "";
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
     final loginState = await getLoginState();
     setState(() {
       isLoggedIn = loginState['isLoggedIn'];
-      username = loginState['username'];
+      username = loginState['user_email'];
       if (isLoggedIn) {
         _fetchRobots();
       } else {
@@ -117,6 +117,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(0, 0, 0, 0),
       body: isLoggedIn
           ? isLoading
               ? Center(child: LoadingScreen())
@@ -297,6 +298,9 @@ class RobotCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Color.fromARGB(255, 255, 255, 255),
+      elevation: 5.0,
+      shadowColor: Colors.black,
       margin: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
@@ -313,7 +317,7 @@ class RobotCard extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Image.asset(
-                'assets/robotEXimg.png',
+                'assets/icon.png',
                 width: 80,
                 height: 80,
               ),

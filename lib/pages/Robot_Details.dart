@@ -154,6 +154,7 @@ class _RobotDetailsState extends State<robotdetails> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: Text('로봇 이름 수정'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -191,6 +192,7 @@ class _RobotDetailsState extends State<robotdetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         centerTitle: true,
         title: GestureDetector(
             onTap: _showEditDialog,
