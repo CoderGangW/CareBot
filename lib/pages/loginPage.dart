@@ -68,7 +68,11 @@ class _LoginPageState extends State<loginPage> {
             responseData['userName'],
             responseData['userPhone'],
             responseData['userOrganization']);
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/',
+          (Route<dynamic> route) => false,
+        );
       } else {
         QuickAlert.show(
             context: context,

@@ -91,7 +91,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  '알림 내역을 보려면 로그인 해야합니다!',
+                  '로그인이 필요한 기능입니다',
                   style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
@@ -176,13 +176,24 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                     size: 24.0,
                                   ),
                                   SizedBox(width: 8.0),
-                                  Text(
-                                    notification.title,
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${notification.roName} - ',
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${notification.title}',
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            color: Color.fromARGB(
+                                                255, 59, 59, 59)),
+                                      )
+                                    ],
                                   ),
                                 ],
                               ),
@@ -234,6 +245,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
 class NotificationItem {
   final int noId;
+  final String roName;
   final int faId;
   final int noLevel;
   final String title;
@@ -242,6 +254,7 @@ class NotificationItem {
 
   NotificationItem({
     required this.noId,
+    required this.roName,
     required this.faId,
     required this.noLevel,
     required this.title,
@@ -258,6 +271,7 @@ class NotificationItem {
 
     return NotificationItem(
       noId: json['no_id'],
+      roName: json['ro_name'],
       faId: json['fa_id'],
       noLevel: json['no_level'],
       title: json['no_title'],

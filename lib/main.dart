@@ -250,7 +250,7 @@ class _CareBotState extends State<CareBot> {
           borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2), // 그림자 투명도 감소
+              color: Colors.black.withOpacity(0.25), // 그림자 투명도 감소
               blurRadius: 30,
               offset: Offset(0, -3),
             ),
@@ -268,28 +268,31 @@ class _CareBotState extends State<CareBot> {
             }
           },
           indicatorShape: CircleBorder(),
-          indicatorColor: Color.fromARGB(255, 131, 59, 255),
+          indicatorColor: Color.fromARGB(0, 0, 0, 0),
           selectedIndex: currentPageIndex,
           backgroundColor: Color.fromARGB(0, 255, 0, 0),
           destinations: <Widget>[
             NavigationDestination(
-              selectedIcon: Icon(Icons.notifications_rounded,
-                  color: Colors.white, size: 28),
+              selectedIcon: Icon(Icons.notifications_outlined,
+                  color: Color.fromARGB(255, 134, 48, 255), size: 32),
               icon: Badge(
-                child: Icon(Icons.notifications_rounded, size: 28),
+                child: Icon(Icons.notifications_outlined, size: 32),
               ),
+              label: '',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.home_outlined,
+                color: Color.fromARGB(255, 134, 48, 255),
+                size: 32,
+              ),
+              icon: Icon(Icons.home_outlined, size: 32),
               label: "",
             ),
             NavigationDestination(
-              selectedIcon:
-                  Icon(Icons.home_rounded, color: Colors.white, size: 28),
-              icon: Icon(Icons.home_rounded, size: 28),
-              label: "",
-            ),
-            NavigationDestination(
-              selectedIcon:
-                  Icon(Icons.more_horiz_rounded, color: Colors.white, size: 28),
-              icon: Icon(Icons.more_horiz_rounded, size: 28),
+              selectedIcon: Icon(Icons.more_horiz_outlined,
+                  color: Color.fromARGB(255, 134, 48, 255), size: 32),
+              icon: Icon(Icons.more_horiz_outlined, size: 32),
               label: '',
             ),
           ],

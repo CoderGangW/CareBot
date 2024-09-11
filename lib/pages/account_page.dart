@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/utils.dart';
 import 'package:myapps/pages/home_page.dart';
 import 'package:myapps/pages/loginPage.dart';
@@ -133,6 +134,8 @@ class accountPage extends StatelessWidget {
                           subContent_location:
                               userInfo['userOrganization-Address'] ?? '위치정보 없음',
                           context: context),
+                      SizedBox(height: 16),
+                      _buildAccountConf(),
                       SizedBox(height: 32),
                       Center(
                         child: ElevatedButton.icon(
@@ -147,7 +150,11 @@ class accountPage extends StatelessWidget {
                             );
                           },
                           icon: Icon(Icons.logout),
-                          label: Text('로그아웃'),
+                          label: Text(
+                            '로그아웃',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 32, vertical: 12),
@@ -167,6 +174,36 @@ class accountPage extends StatelessWidget {
     );
   }
 
+  Widget _buildAccountConf() {
+    return Card(
+      color: Colors.white,
+      elevation: 2,
+      child: ExpansionTile(
+        title: Row(
+          children: [
+            Icon(Icons.settings,
+                size: 28, color: Color.fromARGB(255, 147, 65, 255)),
+            SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '계정 설정',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
+        children: [
+          Column(
+            children: [],
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _buildInfoCard(
       {required IconData icon,
       required String title,
@@ -180,7 +217,7 @@ class accountPage extends StatelessWidget {
       child: ExpansionTile(
         title: Row(
           children: [
-            Icon(icon, size: 28, color: Colors.blueAccent),
+            Icon(icon, size: 28, color: Color.fromARGB(255, 147, 65, 255)),
             SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +267,8 @@ class accountPage extends StatelessWidget {
                         subContent_phone,
                         style: TextStyle(
                             fontSize: 16,
-                            color: Colors.blue), // 클릭할 수 있도록 색상 추가
+                            color: Color.fromARGB(
+                                255, 33, 114, 243)), // 클릭할 수 있도록 색상 추가
                       ),
                     ),
                   ),
@@ -272,7 +310,7 @@ class accountPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            Icon(icon, size: 28, color: Colors.blueAccent),
+            Icon(icon, size: 28, color: Color.fromARGB(255, 147, 65, 255)),
             SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

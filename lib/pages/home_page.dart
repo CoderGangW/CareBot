@@ -197,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      '로봇을 보려면 로그인 해주세요!',
+                      '로그인이 필요한 기능입니다',
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,

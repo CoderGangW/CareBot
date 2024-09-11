@@ -3,7 +3,7 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:myapps/main.dart' as user;
 import 'package:shared_preferences/shared_preferences.dart';
 
-const appVersion = "Alpha 2.1.0";
+const appVersion = "Alpha 2.2.0";
 
 class MorePage extends StatefulWidget {
   const MorePage({Key? key}) : super(key: key);
@@ -122,9 +122,14 @@ class _MorePageState extends State<MorePage> {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: ElevatedButton(
-              onPressed: () {
-                setState(() async {
+              onPressed: () async {
+                // 비동기 작업을 setState 외부에서 수행
+                final prefs = await SharedPreferences.getInstance();
+
+                // 비동기 작업 완료 후에 setState로 상태 업데이트
+                setState(() {
                   _isNotiState = !_isNotiState;
+
                   if (_isNotiState) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -150,9 +155,10 @@ class _MorePageState extends State<MorePage> {
                       ),
                     );
                   }
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.setBool('isNotiState', _isNotiState);
                 });
+
+                // SharedPreferences 저장 (setState 외부에서 비동기 처리)
+                prefs.setBool('isNotiState', _isNotiState);
               },
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
@@ -166,37 +172,44 @@ class _MorePageState extends State<MorePage> {
                 trailing: Switch.adaptive(
                   activeColor: Colors.deepPurple,
                   value: _isNotiState,
-                  onChanged: (bool value) {
-                    setState(() async {
+                  onChanged: (bool value) async {
+                    // 비동기 작업은 setState 외부에서 처리
+                    final prefs = await SharedPreferences.getInstance();
+
+                    // setState는 상태만 즉시 업데이트
+                    setState(() {
                       _isNotiState = value;
-                      if (_isNotiState) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Color.fromARGB(255, 136, 255, 128),
-                            duration: const Duration(milliseconds: 500),
-                            content: Text(
-                              '알림을 받습니다!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Color.fromARGB(255, 255, 128, 128),
-                            duration: const Duration(milliseconds: 500),
-                            content: Text(
-                              '알림을 받지 않습니다!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        );
-                      }
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.setBool('isNotiState', _isNotiState);
                     });
+
+                    // 상태에 따라 다른 메시지를 표시
+                    if (_isNotiState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Color.fromARGB(255, 136, 255, 128),
+                          duration: const Duration(milliseconds: 500),
+                          content: Text(
+                            '알림을 받습니다!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Color.fromARGB(255, 255, 128, 128),
+                          duration: const Duration(milliseconds: 500),
+                          content: Text(
+                            '알림을 받지 않습니다!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      );
+                    }
+
+                    // SharedPreferences 업데이트 (setState 외부에서)
+                    prefs.setBool('isNotiState', _isNotiState);
                   },
                 ),
               ),
