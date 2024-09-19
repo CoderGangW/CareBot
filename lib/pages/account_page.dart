@@ -93,7 +93,7 @@ class accountPage extends StatelessWidget {
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Image.asset(
-                    "assets/HAESILE_Flutter_Thumnail.png",
+                    "assets/HAESILE_Thumnail.png",
                     fit: BoxFit.cover,
                   ),
                 ),

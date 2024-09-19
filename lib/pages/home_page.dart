@@ -133,8 +133,7 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              offset:
-                                  Offset(0, 6), // changes position of shadow
+                              offset: Offset(0, 6), // 그림자 위치 조정
                             ),
                           ],
                         ),
@@ -142,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.cloud_off_rounded, // 잠금 아이콘
+                              Icons.cloud_off_rounded, // 네트워크 연결 실패 아이콘
                               size: 50,
                               color: Colors.white,
                             ),
@@ -168,18 +167,24 @@ class _HomePageState extends State<HomePage> {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
-                              children: robots.map((robot) {
-                                return RobotCard(
-                                  robotName: robot['name']!,
-                                  batteryLevel: robot['battery']!,
-                                  status: robot['status']!,
-                                  serial: robot['serial']!,
-                                );
-                              }).toList(),
+                              children: [
+                                // 로봇 카드들을 리스트로 보여줌
+                                ...robots.map((robot) {
+                                  return RobotCard(
+                                    robotName: robot['name']!,
+                                    batteryLevel: robot['battery']!,
+                                    status: robot['status']!,
+                                    serial: robot['serial']!,
+                                  );
+                                }).toList(),
+                                // 마지막에 추가 카드
+                                build_add_card(context), // context 제거
+                              ],
                             ),
                           ),
                         ),
-                      ))
+                      ),
+                    )
           : Center(
               child: Container(
                 padding: EdgeInsets.all(20.0),
@@ -218,17 +223,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-      floatingActionButton: isLoggedIn
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/addRobot').then((_) {
-                  _fetchRobots();
-                });
-              },
-              tooltip: "로봇 추가",
-              child: Icon(Icons.add),
-            )
-          : null,
     );
   }
 }
@@ -366,4 +360,34 @@ class RobotCard extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget build_add_card(context) {
+  return Card(
+    color: Color.fromARGB(255, 255, 255, 255),
+    elevation: 5.0,
+    shadowColor: Colors.black,
+    margin: const EdgeInsets.all(8.0),
+    child: InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, '/addRobot');
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: SizedBox(
+            width: 80,
+            height: 40,
+            child: Center(
+              child: Icon(
+                Icons.add_rounded, // + 모양의 아이콘
+                size: 35, // 아이콘 크기 조정
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }

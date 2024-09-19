@@ -545,7 +545,7 @@ class _RobotDetailsState extends State<robotdetails> {
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                     Transform.rotate(
-                      angle: 1.5708, // 90도 회전
+                      angle: 0, // 90도 회전
                       child: Icon(
                         _getBatteryIcon(),
                         color: Colors.white,

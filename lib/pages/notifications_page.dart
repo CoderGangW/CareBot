@@ -115,127 +115,124 @@ class _NotificationsPageState extends State<NotificationsPage> {
       );
     } else {
       return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: RefreshIndicator(
-            onRefresh: _refreshNotifications,
-            child: FutureBuilder<List<NotificationItem>>(
-              future: _notifications,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: LoadingScreen());
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Container(
-                      padding: EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 140, 79, 255), // 배경색
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.error_outline, // 에러 아이콘
-                            size: 50,
-                            color: Colors.white,
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            '알림데이터를 받아오는데 실패했습니다!',
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
+        body: RefreshIndicator(
+          onRefresh: _refreshNotifications,
+          child: FutureBuilder<List<NotificationItem>>(
+            future: _notifications,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return LoadingScreen();
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Container(
+                    padding: EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 140, 79, 255), // 배경색
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('알림이 없습니다.'));
-                } else {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      var notification = snapshot.data![index];
-                      return Card(
-                        elevation: 3.0,
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.notifications,
-                                    color: Color.fromARGB(255, 206, 183, 37),
-                                    size: 24.0,
-                                  ),
-                                  SizedBox(width: 8.0),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '${notification.roName} - ',
-                                        style: TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${notification.title}',
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            color: Color.fromARGB(
-                                                255, 59, 59, 59)),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 8.0),
-
-                              // 내용 부분
-                              Text(
-                                notification.subtitle,
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                              SizedBox(height: 8.0),
-
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(
-                                    Icons.access_time,
-                                    color: Colors.grey,
-                                    size: 16.0,
-                                  ),
-                                  SizedBox(width: 5.0),
-                                  Text(
-                                    notification.getRelativeTime(),
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.error_outline, // 에러 아이콘
+                          size: 50,
+                          color: Colors.white,
                         ),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
+                        SizedBox(height: 10),
+                        Text(
+                          '알림데이터를 받아오는데 실패했습니다!',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('알림이 없습니다.'));
+              } else {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    var notification = snapshot.data![index];
+                    return Card(
+                      elevation: 3.0,
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.notifications,
+                                  color: Color.fromARGB(255, 206, 183, 37),
+                                  size: 24.0,
+                                ),
+                                SizedBox(width: 8.0),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${notification.roName} - ',
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${notification.title}',
+                                      style: TextStyle(
+                                          fontSize: 18.0,
+                                          color:
+                                              Color.fromARGB(255, 59, 59, 59)),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8.0),
+
+                            // 내용 부분
+                            Text(
+                              notification.subtitle,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Icon(
+                                  Icons.access_time,
+                                  color: Colors.grey,
+                                  size: 16.0,
+                                ),
+                                SizedBox(width: 5.0),
+                                Text(
+                                  notification.getRelativeTime(),
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+            },
           ),
         ),
       );
