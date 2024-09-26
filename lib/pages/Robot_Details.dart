@@ -252,8 +252,15 @@ class _RobotDetailsState extends State<robotdetails> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(robotName, textAlign: TextAlign.center),
-                Icon(Icons.create_rounded)
+                Text(
+                  robotName,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Icon(
+                  Icons.create_rounded,
+                  color: Colors.grey,
+                )
               ],
             )),
         actions: [

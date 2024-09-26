@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:get/utils.dart';
 import 'package:myapps/pages/home_page.dart';
 import 'package:myapps/pages/loginPage.dart';
@@ -93,7 +94,7 @@ class accountPage extends StatelessWidget {
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Image.asset(
-                    "assets/HAESILE_Thumnail.png",
+                    "assets/HAESILE_ThumNail.png",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -135,7 +136,7 @@ class accountPage extends StatelessWidget {
                               userInfo['userOrganization-Address'] ?? '위치정보 없음',
                           context: context),
                       SizedBox(height: 16),
-                      _buildAccountConf(),
+                      _buildAccountConf(context),
                       SizedBox(height: 32),
                       Center(
                         child: ElevatedButton.icon(
@@ -174,14 +175,82 @@ class accountPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountConf() {
+  Widget _buildAccountConf(context) {
+    Future<void> FireQuery(String userEmail) async {
+      final String url;
+
+      url = getApiUrl('/remove/account-fire');
+
+      // if (Platform.isAndroid) {
+      //   url = 'http://10.0.2.2/select/user-facility';
+      // } else if (Platform.isIOS) {
+      //   url = 'http://127.0.0.1/select/user-facility';
+      // } else {
+      //   throw UnsupportedError('지원되지 않는 환경입니다.');
+      // }
+
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+
+      final bodyData = jsonEncode({'fire_Account': userEmail});
+
+      try {
+        final response = await http.post(
+          Uri.parse(url),
+          headers: headers,
+          body: bodyData,
+        );
+        if (response.statusCode == 200) {
+          var responseData = json.decode(response.body);
+          print('fireAccount Result : ${responseData}');
+        }
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+    }
+
+    Future<void> _confirmFire() async {
+      showPlatformDialog(
+        context: context,
+        builder: (context) => BasicDialogAlert(
+          title: Text(
+            "회원을 탈퇴하시겠습니까?",
+            style: TextStyle(fontSize: 20),
+          ),
+          actions: <Widget>[
+            BasicDialogAction(
+              title: Text("삭제"),
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                String? userEmail = prefs.getString('user_email');
+                FireQuery(userEmail!);
+                await prefs.clear();
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/',
+                  (Route<dynamic> route) => false,
+                );
+              },
+            ),
+            BasicDialogAction(
+              title: Text("취소"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
     return Card(
       color: Colors.white,
       elevation: 2,
       child: ExpansionTile(
         title: Row(
           children: [
-            Icon(Icons.settings,
+            Icon(Icons.manage_accounts_rounded,
                 size: 28, color: Color.fromARGB(255, 147, 65, 255)),
             SizedBox(width: 16),
             Column(
@@ -197,7 +266,32 @@ class accountPage extends StatelessWidget {
         ),
         children: [
           Column(
-            children: [],
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    _confirmFire();
+                  },
+                  icon: Icon(Icons.no_accounts_rounded),
+                  label: Text(
+                    '회원탈퇴',
+                    style:
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    backgroundColor: Color.fromARGB(255, 188, 8, 8),
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+            ],
           )
         ],
       ),

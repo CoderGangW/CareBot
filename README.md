@@ -17,9 +17,9 @@
 
 # [1] Technologies
 
-- [Flutter](https://flutter.dev/) 3.22.1
-- [Xcode](https://developer.apple.com/kr/xcode/) 15.3
-- [Swift](https://spring.io/) 5.10
+- [Flutter](https://flutter.dev/) 3.22.2
+- [Xcode](https://developer.apple.com/kr/xcode/) 16.0
+- [Swift](https://spring.io/) 6.0
 - [Android-SDK](https://developer.android.com/studio?hl=ko) 34.0.0
 - [Kotlin](https://kotlinlang.org/) 1.18.2
 
