@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
 class LoadingScreen extends StatelessWidget {
+  final String text;
+
+  LoadingScreen({required this.text});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 245, 245, 245),
+      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       body: Column(
         children: [
-          Spacer(),
+          const Spacer(),
           Center(
             child: Image.asset(
               'assets/haesil_loading.gif', // 로딩 GIF 파일의 경로
@@ -16,10 +20,10 @@ class LoadingScreen extends StatelessWidget {
             ),
           ),
           Text(
-            '정보 불러오는중..',
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            text,
+            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
-          Spacer()
+          const Spacer(),
         ],
       ),
     );

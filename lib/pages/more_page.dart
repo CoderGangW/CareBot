@@ -5,6 +5,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const appVersion = "Alpha 2.2.0";
 
+class ButtonData {
+  final IconData icon;
+  final String title;
+  final String contentTitle;
+  final String contentSubtitle;
+  final Function(BuildContext) onPressed;
+
+  ButtonData({
+    required this.icon,
+    required this.title,
+    required this.contentTitle,
+    required this.contentSubtitle,
+    required this.onPressed,
+  });
+}
+
 class MorePage extends StatefulWidget {
   const MorePage({Key? key}) : super(key: key);
 
@@ -17,10 +33,57 @@ class _MorePageState extends State<MorePage> {
   bool _isLoggedIn = false;
   bool _isNotiState = true;
 
+  late List<ButtonData> _myRobotButtons;
+  late List<ButtonData> _appInfoButtons;
+
   @override
   void initState() {
     super.initState();
     _loadLoggedInUser();
+    _initializeButtons();
+  }
+
+  void _initializeButtons() {
+    _myRobotButtons = [
+      ButtonData(
+        icon: Icons.add,
+        title: "로봇 추가",
+        contentTitle: "개발중",
+        contentSubtitle: "기능이 완성되지 않았습니다!",
+        onPressed: (context) => Navigator.pushNamed(context, "/addRobot"),
+      ),
+      ButtonData(
+        icon: Icons.settings_outlined,
+        title: "로봇 관리",
+        contentTitle: "개발중",
+        contentSubtitle: "기능이 완성되지 않았습니다!",
+        onPressed: _showDefaultDialog,
+      ),
+      ButtonData(
+        icon: Icons.article_outlined,
+        title: "로봇 사용법",
+        contentTitle: "요로코롬",
+        contentSubtitle: "이러케 저러케",
+        onPressed: _showDefaultDialog,
+      ),
+    ];
+
+    _appInfoButtons = [
+      ButtonData(
+        icon: Icons.campaign_outlined,
+        title: "우리의 목표",
+        contentTitle: "해피 실버 데이",
+        contentSubtitle: "행복한 노년생활!",
+        onPressed: (context) => Navigator.pushNamed(context, "/goal"),
+      ),
+      ButtonData(
+        icon: Icons.assignment_ind_outlined,
+        title: "개발자 소개",
+        contentTitle: "강윤원",
+        contentSubtitle: "살려줘...",
+        onPressed: (context) => Navigator.pushNamed(context, "/intro-dev"),
+      ),
+    ];
   }
 
   Future<void> _loadLoggedInUser() async {
@@ -43,276 +106,55 @@ class _MorePageState extends State<MorePage> {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: ListView(
-        children: <Widget>[
-          SizedBox(height: 50),
-          InkWell(
-            onTap: () {
-              if (!_isLoggedIn) {
-                Navigator.pushNamed(context, '/login');
-              } else {
-                Navigator.pushNamed(context, '/account');
-              }
-            },
-            customBorder: CircleBorder(),
-            child: CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.deepPurpleAccent,
-              child: CircleAvatar(
-                radius: 47,
-                backgroundColor: Colors.white,
-                child: ClipOval(
-                  child: Image.asset(
-                    'assets/usericon.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          Text(
-            _loggedInUser.isEmpty ? "로그인" : _loggedInUser,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 20),
-          Text(
-            '내 로봇',
-            style: TextStyle(
-                fontSize: 17,
-                color: Colors.black54,
-                fontWeight: FontWeight.bold),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              List<IconData> li_Icon = [
-                Icons.add,
-                Icons.settings_outlined,
-                Icons.article_outlined,
-              ];
-              const li_btnTitle = ["로봇 추가", "로봇 관리", "로봇 사용법"];
-              const li_ctsTitle = ["개발중", "개발중", "요로코롬"];
-              const li_ctsSubTitle = [
-                "기능이 완성되지 않았습니다!",
-                "기능이 완성되지 않았습니다!",
-                "이러케 저러케"
-              ];
-              return _buildButton_myrobot(context, index, li_Icon, li_btnTitle,
-                  li_ctsTitle, li_ctsSubTitle);
-            },
-          ),
-          SizedBox(height: 20),
-          Text(
-            '앱 정보',
-            style: TextStyle(
-                fontSize: 17,
-                color: Colors.black54,
-                fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: ElevatedButton(
-              onPressed: () async {
-                // 비동기 작업을 setState 외부에서 수행
-                final prefs = await SharedPreferences.getInstance();
-
-                // 비동기 작업 완료 후에 setState로 상태 업데이트
-                setState(() {
-                  _isNotiState = !_isNotiState;
-
-                  if (_isNotiState) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: Color.fromARGB(255, 136, 255, 128),
-                        duration: const Duration(milliseconds: 500),
-                        content: Text(
-                          '알림을 받습니다!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: Color.fromARGB(255, 255, 128, 128),
-                        duration: const Duration(milliseconds: 500),
-                        content: Text(
-                          '알림을 받지 않습니다!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    );
-                  }
-                });
-
-                // SharedPreferences 저장 (setState 외부에서 비동기 처리)
-                prefs.setBool('isNotiState', _isNotiState);
-              },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                backgroundColor: Colors.white,
-              ),
-              child: ListTile(
-                leading: Icon(Icons.notifications_outlined),
-                title: Text("알림설정"),
-                trailing: Switch.adaptive(
-                  activeColor: Colors.deepPurple,
-                  value: _isNotiState,
-                  onChanged: (bool value) async {
-                    // 비동기 작업은 setState 외부에서 처리
-                    final prefs = await SharedPreferences.getInstance();
-
-                    // setState는 상태만 즉시 업데이트
-                    setState(() {
-                      _isNotiState = value;
-                    });
-
-                    // 상태에 따라 다른 메시지를 표시
-                    if (_isNotiState) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Color.fromARGB(255, 136, 255, 128),
-                          duration: const Duration(milliseconds: 500),
-                          content: Text(
-                            '알림을 받습니다!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Color.fromARGB(255, 255, 128, 128),
-                          duration: const Duration(milliseconds: 500),
-                          content: Text(
-                            '알림을 받지 않습니다!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      );
-                    }
-
-                    // SharedPreferences 업데이트 (setState 외부에서)
-                    prefs.setBool('isNotiState', _isNotiState);
-                  },
-                ),
-              ),
-            ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: 2,
-            itemBuilder: (context, index) {
-              List<IconData> li_Icon = [
-                Icons.campaign_outlined,
-                Icons.assignment_ind_outlined,
-              ];
-              const li_btnTitle = ["우리의 목표", "개발자 소개"];
-              const li_ctsTitle = ["해피 실버 데이", "강윤원"];
-              const li_ctsSubTitle = ["행복한 노년생활!", "살려줘..."];
-              return _buildButton_appinfo(context, index, li_Icon, li_btnTitle,
-                  li_ctsTitle, li_ctsSubTitle);
-            },
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          SizedBox(
-            height: 30,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("앱 버전"),
-                Text(appVersion),
-              ],
-            ),
+  void _showDefaultDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("알림"),
+        content: Text("이 기능은 아직 개발 중입니다."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('닫기'),
           ),
         ],
       ),
-    ));
+    );
   }
 
-  Widget _buildButton_myrobot(BuildContext context, int index,
-      List<IconData> iconList, List btnTitle, List ctsTitle, List ctsSubTitle) {
-    if (!_isLoggedIn && index == 0) {
-      return SizedBox();
-    } else {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: ElevatedButton(
-          onPressed: () {
-            if (index == 0) {
-              Navigator.pushNamed(context, "/addRobot");
-            } else {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('닫기'),
-                    )
-                  ],
-                  title: Text(ctsTitle[index]),
-                  content: Text(ctsSubTitle[index]),
-                ),
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            backgroundColor: Colors.white,
-          ),
-          child: ListTile(
-              leading: Icon(iconList[index]), title: Text(btnTitle[index])),
+  void _toggleNotification() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isNotiState = !_isNotiState;
+      _showNotificationSnackBar();
+    });
+    await prefs.setBool('isNotiState', _isNotiState);
+  }
+
+  void _showNotificationSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: _isNotiState
+            ? Color.fromARGB(255, 136, 255, 128)
+            : Color.fromARGB(255, 255, 128, 128),
+        duration: const Duration(milliseconds: 500),
+        content: Text(
+          _isNotiState ? '알림을 받습니다!' : '알림을 받지 않습니다!',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.black),
         ),
-      );
-    }
+      ),
+    );
   }
 
-  Widget _buildButton_appinfo(BuildContext context, int index,
-      List<IconData> iconList, List btnTitle, List ctsTitle, List ctsSubTitle) {
+  Widget _buildButton(ButtonData data) {
+    if (!_isLoggedIn && data.title == "로봇 추가") {
+      return SizedBox();
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('닫기'),
-                )
-              ],
-              title: Text(ctsTitle[index]),
-              content: Text(ctsSubTitle[index]),
-            ),
-          );
-        },
+        onPressed: () => data.onPressed(context),
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
@@ -320,30 +162,104 @@ class _MorePageState extends State<MorePage> {
           backgroundColor: Colors.white,
         ),
         child: ListTile(
-            leading: Icon(iconList[index]), title: Text(btnTitle[index])),
+          leading: Icon(data.icon),
+          title: Text(data.title),
+        ),
       ),
     );
   }
 
-  void _showLogoutDialog() {
-    showPlatformDialog(
-      context: context,
-      builder: (context) => BasicDialogAlert(
-        title: Text("로그아웃 하시겠습니까?"),
-        actions: <Widget>[
-          BasicDialogAction(
-            title: Text("취소"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          BasicDialogAction(
-            title: Text("로그아웃"),
-            onPressed: () {
-              _logout();
-            },
-          ),
-        ],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: ListView(
+          children: <Widget>[
+            SizedBox(height: 50),
+            InkWell(
+              onTap: () {
+                if (!_isLoggedIn) {
+                  Navigator.pushNamed(context, '/login');
+                } else {
+                  Navigator.pushNamed(context, '/account');
+                }
+              },
+              customBorder: CircleBorder(),
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.deepPurpleAccent,
+                child: CircleAvatar(
+                  radius: 47,
+                  backgroundColor: Colors.white,
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/usericon.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              _loggedInUser.isEmpty ? "로그인" : _loggedInUser,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            Text(
+              '내 로봇',
+              style: TextStyle(
+                  fontSize: 17,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold),
+            ),
+            ..._myRobotButtons.map(_buildButton),
+            SizedBox(height: 20),
+            Text(
+              '앱 정보',
+              style: TextStyle(
+                  fontSize: 17,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton(
+                onPressed: _toggleNotification,
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  backgroundColor: Colors.white,
+                ),
+                child: ListTile(
+                  leading: Icon(Icons.notifications_outlined),
+                  title: Text("알림설정"),
+                  trailing: Switch.adaptive(
+                    activeColor: Colors.deepPurple,
+                    value: _isNotiState,
+                    onChanged: (bool value) => _toggleNotification(),
+                  ),
+                ),
+              ),
+            ),
+            ..._appInfoButtons.map(_buildButton),
+            SizedBox(height: 30),
+            SizedBox(
+              height: 30,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("앱 버전"),
+                  Text(appVersion),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

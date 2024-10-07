@@ -152,7 +152,9 @@ class _SignUpPageState extends State<signupPage> {
       ),
       body: SafeArea(
         child: _isLoading
-            ? LoadingScreen()
+            ? LoadingScreen(
+                text: '회원가입 처리중',
+              )
             : Center(
                 child: SingleChildScrollView(
                   child: Padding(

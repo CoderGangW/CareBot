@@ -7,10 +7,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:myapps/pages/account_page.dart';
 import 'package:myapps/pages/add_Robot.dart';
 import 'package:myapps/pages/home_page.dart';
+import 'package:myapps/pages/intro4Dev.dart';
 import 'package:myapps/pages/notifications_page.dart';
 import 'package:myapps/pages/loginPage.dart';
 import 'package:myapps/pages/more_page.dart';
 import 'package:myapps/pages/Robot_Details.dart';
+import 'package:myapps/pages/ourGoal_page.dart';
 import 'package:myapps/pages/signup_Page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -197,10 +199,12 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/robot_details': (context) => robotdetails(),
         '/more': (context) => MorePage(),
-        '/addRobot': (context) => addRobot(),
+        '/addRobot': (context) => AddRobot(),
         '/account': (context) => accountPage(),
         '/login': (context) => loginPage(),
         '/login/signup': (context) => signupPage(),
+        '/goal': (context) => OurGoalPage(),
+        '/intro-dev': (context) => Intro4dev(),
       },
     );
   }

@@ -106,7 +106,10 @@ class _SearchOrganizationPageState extends State<SearchOrganizationPage> {
             ),
             SizedBox(height: 20),
             _isLoading
-                ? Expanded(child: LoadingScreen())
+                ? Expanded(
+                    child: LoadingScreen(
+                    text: '기관 불러오는중',
+                  ))
                 : Expanded(
                     child: ListView.builder(
                       itemCount: _filteredOrganizations.length,

@@ -239,7 +239,9 @@ class _RobotDetailsState extends State<robotdetails> {
 
   Widget build(BuildContext context) {
     if (isLoading) {
-      return LoadingScreen();
+      return LoadingScreen(
+        text: '로봇정보 불러오는중',
+      );
     }
 
     return Scaffold(

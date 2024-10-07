@@ -120,7 +120,10 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Color.fromARGB(0, 0, 0, 0),
       body: isLoggedIn
           ? isLoading
-              ? Center(child: LoadingScreen())
+              ? Center(
+                  child: LoadingScreen(
+                  text: '로봇 불러오는중',
+                ))
               : robots.isEmpty
                   ? Center(
                       child: Container(

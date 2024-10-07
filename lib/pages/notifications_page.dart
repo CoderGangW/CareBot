@@ -121,7 +121,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
             future: _notifications,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return LoadingScreen();
+                return LoadingScreen(
+                  text: '알림정보 불러오는중',
+                );
               } else if (snapshot.hasError) {
                 return Center(
                   child: Container(

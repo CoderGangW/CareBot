@@ -115,7 +115,10 @@ class _LoginPageState extends State<loginPage> {
         ),
         body: SafeArea(
           child: _isLoading
-              ? Center(child: LoadingScreen())
+              ? Center(
+                  child: LoadingScreen(
+                  text: '로그인 하는중',
+                ))
               : Center(
                   child: SingleChildScrollView(
                   child: Column(

@@ -78,7 +78,10 @@ class accountPage extends StatelessWidget {
         future: getUserInfo(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: LoadingScreen());
+            return Center(
+                child: LoadingScreen(
+              text: '정보 불러오는중',
+            ));
           }
           if (snapshot.hasError || snapshot.data == null) {
             return Center(child: Text('사용자 정보를 불러올 수 없습니다.'));
